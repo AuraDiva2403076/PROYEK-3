@@ -7,6 +7,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #FDF7F7; }
         .sidebar-active { background: #FF9B9B; color: white !important; border-radius: 12px; }
@@ -21,7 +22,15 @@
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-2xl font-bold text-pink-400"> @yield('title', 'Dashboard') </h1>
             <div class="flex items-center space-x-4">
-                <input type="text" placeholder="Cari..." class="px-4 py-2 border border-pink-100 rounded-full w-96 focus:outline-none focus:ring-2 focus:ring-pink-200">
+                <form method="GET" action="{{ route('katalog') }}">
+    <input type="text"
+        name="search"
+        value="{{ request('search') }}"
+        placeholder="Cari..."
+        class="px-4 py-2 border border-pink-100 rounded-full w-96 
+               focus:outline-none focus:ring-2 focus:ring-pink-200">
+</form>
+
                 <div class="flex items-center space-x-2 bg-white p-2 rounded-lg shadow-sm">
                     <img src="https://flagcdn.com/w20/id.png" width="20" alt="ID">
                     <span class="font-bold">ID</span>

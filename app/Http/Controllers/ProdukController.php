@@ -80,5 +80,22 @@ public function katalog(Request $request)
     return view('katalog', compact('produks'));
 }
 
+public function search(Request $request)
+{
+    $query = Produk::query();
+
+    if ($request->search) {
+        $query->where(function($q) use ($request) {
+            $q->where('nama_produk', 'like', '%' . $request->search . '%')
+              ->orWhere('kode_produk', 'like', '%' . $request->search . '%')
+              ->orWhere('warna', 'like', '%' . $request->search . '%');
+        });
+    }
+
+    $produks = $query->latest()->paginate(8)->withQueryString();
+
+    return view('katalog', compact('produks'));
+}
+
 
 }

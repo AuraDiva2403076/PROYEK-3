@@ -4,8 +4,9 @@
 
 @section('content')
 <div class="space-y-6">
+<div class="space-y-6">
 
-    <!-- ================= HEADER ================= -->
+    <!-- HEADER -->
     <div class="flex justify-between items-center">
 
         <!-- KIRI -->
@@ -23,6 +24,7 @@
                 Filter
             </button>
 
+
             <!-- DROPDOWN FILTER -->
             <div id="filterDropdown" 
                 class="hidden absolute top-12 left-0 bg-white shadow-xl rounded-2xl p-4 w-64 z-40">
@@ -36,6 +38,7 @@
                             <option value="">Semua</option>
                             <option value="Pashmina">Pashmina</option>
                             <option value="Segi Empat">Segi Empat</option>
+                            <option value="Segi Empat">Warna</option>
                         </select>
                     </div>
 
@@ -81,86 +84,121 @@
 
     <!-- ================= TABLE ================= -->
     <div class="bg-white rounded-3xl p-6 shadow overflow-x-auto">
-        <table class="w-full text-sm text-left">
-            <thead>
-                <tr class="border-b text-gray-500">
-                    <th class="py-3">Kode</th>
-                    <th>Gambar</th>
-                    <th>Nama</th>
-                    <th>Ukuran</th>
-                    <th>Kategori</th>
-                    <th>Harga</th>
-                    <th>Warna</th>
-                    <th>Stok</th>
-                    <th>Deskripsi</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
-            </thead>
+        <table class="w-full text-sm text-left border-collapse">
 
-            <tbody class="divide-y">
-                @forelse($produks as $produk)
-                <tr class="hover:bg-gray-50">
-                    <td>{{ $produk->kode_produk }}</td>
+           <thead>
+    <tr class="bg-pink-50 text-gray-600">
+        <th class="border border-pink-200 px-3 py-3">Nomor</th>
+        <th class="border border-pink-200 px-3 py-3">Kode</th>
+        <th class="border border-pink-200 px-3 py-3">Gambar</th>
+        <th class="border border-pink-200 px-3 py-3">Nama</th>
+        <th class="border border-pink-200 px-3 py-3">Ukuran</th>
+        <th class="border border-pink-200 px-3 py-3">Kategori</th>
+        <th class="border border-pink-200 px-3 py-3">Harga</th>
+        <th class="border border-pink-200 px-3 py-3">Warna</th>
+        <th class="border border-pink-200 px-3 py-3">Stok</th>
+        <th class="border border-pink-200 px-3 py-3">Deskripsi</th>
+        <th class="border border-pink-200 px-3 py-3 text-center">Aksi</th>
+    </tr>
+</thead>
 
-                    <td>
-                        @if($produk->gambar)
-                            <img src="{{ asset('storage/'.$produk->gambar) }}" 
-                                class="w-10 h-10 rounded-full object-cover">
-                        @else
-                            <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
-                        @endif
-                    </td>
+<tbody>
+@forelse($produks as $produk)
+<tr class="hover:bg-pink-50 transition">
 
-                    <td>{{ $produk->nama_produk }}</td>
-                    <td>{{ $produk->ukuran }}</td>
-                    <td>{{ $produk->kategori }}</td>
-                    <td>Rp{{ number_format($produk->harga) }}</td>
-                    <td>{{ $produk->warna }}</td>
-                    <td>{{ $produk->stok }}</td>
-                    <td class="truncate max-w-[150px]">
-                        {{ $produk->deskripsi }}
-                    </td>
+<td class="border border-pink-100 px-3 py-2">
+    {{ $loop->iteration }}
+</td>
 
-                    <td class="text-center space-x-2">
+<td class="border border-pink-100 px-3 py-2">
+    {{ $produk->kode_produk }}
+</td>
 
-                        <!-- EDIT -->
-                        <button 
-                            onclick="editProduk(
-                                '{{ $produk->id }}',
-                                '{{ $produk->kode_produk }}',
-                                '{{ $produk->nama_produk }}',
-                                '{{ $produk->ukuran }}',
-                                '{{ $produk->kategori }}',
-                                '{{ $produk->stok }}',
-                                '{{ $produk->warna }}',
-                                '{{ $produk->harga }}',
-                                `{{ $produk->deskripsi }}`
-                            )"
-                            class="bg-yellow-400 text-white px-3 py-1 rounded-lg text-xs">
-                            Edit
-                        </button>
+<td class="border border-pink-100 px-3 py-2">
+    @if($produk->gambar)
+        <img src="{{ asset('storage/'.$produk->gambar) }}"
+             class="w-10 h-10 rounded-full object-cover border border-pink-200">
+    @else
+        <div class="w-10 h-10 bg-pink-100 rounded-full"></div>
+    @endif
+</td>
 
-                        <!-- DELETE -->
-                        <form action="{{ route('produk.destroy', $produk->id) }}" 
-                            method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button onclick="return confirm('Yakin hapus produk?')" 
-                                class="bg-red-500 text-white px-3 py-1 rounded-lg text-xs">
-                                Hapus
-                            </button>
-                        </form>
+<td class="border border-pink-100 px-3 py-2 font-medium">
+    {{ $produk->nama_produk }}
+</td>
 
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="10" class="text-center py-6 text-gray-400">
-                        Belum ada produk
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
+<td class="border border-pink-100 px-3 py-2">
+    {{ $produk->ukuran }}
+</td>
+
+<td class="border border-pink-100 px-3 py-2">
+    {{ $produk->kategori }}
+</td>
+
+<td class="border border-pink-100 px-3 py-2 text-pink-500 font-semibold">
+    Rp{{ number_format($produk->harga) }}
+</td>
+
+<td class="border border-pink-100 px-3 py-2">
+    {{ $produk->warna }}
+</td>
+
+<td class="border border-pink-100 px-3 py-2">
+    <span class="px-2 py-1 text-xs rounded-lg 
+        {{ $produk->stok > 5 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
+        {{ $produk->stok }}
+    </span>
+</td>
+
+<td class="border border-pink-100 px-3 py-2 truncate max-w-[150px] text-gray-500">
+    {{ $produk->deskripsi }}
+</td>
+
+<td class="border border-pink-100 px-3 py-2 text-center space-x-3">
+
+    <!-- EDIT ICON -->
+    <button
+        onclick="editProduk(
+            '{{ $produk->id }}',
+            '{{ $produk->kode_produk }}',
+            '{{ $produk->nama_produk }}',
+            '{{ $produk->ukuran }}',
+            '{{ $produk->kategori }}',
+            '{{ $produk->stok }}',
+            '{{ $produk->warna }}',
+            '{{ $produk->harga }}',
+            `{{ $produk->deskripsi }}`
+        )"
+        class="text-yellow-500 hover:text-yellow-600 text-lg transition"
+        title="Edit">
+        <i class="fa-solid fa-pen-to-square"></i>
+    </button>
+
+    <!-- DELETE ICON -->
+    <form action="{{ route('produk.destroy', $produk->id) }}"
+          method="POST" class="inline">
+        @csrf
+        @method('DELETE')
+        <button onclick="return confirm('Yakin hapus produk?')"
+            class="text-red-500 hover:text-red-600 text-lg transition"
+            title="Hapus">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+    </form>
+
+</td>
+
+</tr>
+
+@empty
+<tr>
+    <td colspan="11" class="text-center py-6 text-gray-400 border border-pink-100">
+        Belum ada produk
+    </td>
+</tr>
+@endforelse
+</tbody>
+
         </table>
 
         <div class="mt-6">

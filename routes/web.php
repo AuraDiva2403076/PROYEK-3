@@ -22,5 +22,7 @@ Route::delete('/produk/{id}', [ProdukController::class, 'destroy'])
     ->name('produk.destroy');
 Route::put('/produk/{id}', [ProdukController::class, 'update'])
     ->name('produk.update');
-
 Route::get('/katalog', [ProdukController::class, 'katalog'])->name('katalog');
+Route::get('/katalog', [ProdukController::class, 'search'])->name('katalog');
+
+
