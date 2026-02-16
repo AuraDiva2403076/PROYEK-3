@@ -4,51 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hara Dashboard</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #FDF7F7; }
-        .sidebar-active { background: #FF9B9B; color: white !important; border-radius: 12px; }
         .card-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
     </style>
 </head>
+
 <body class="flex">
 
+    {{-- SIDEBAR --}}
     <x-sidebar />
 
+    {{-- MAIN CONTENT --}}
     <main class="flex-1 p-8">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-2xl font-bold text-pink-400"> @yield('title', 'Dashboard') </h1>
-            <div class="flex items-center space-x-4">
-                <form method="GET" action="{{ route('katalog') }}">
-    <input type="text"
-        name="search"
-        value="{{ request('search') }}"
-        placeholder="Cari..."
-        class="px-4 py-2 border border-pink-100 rounded-full w-96 
-               focus:outline-none focus:ring-2 focus:ring-pink-200">
-</form>
 
-                <div class="flex items-center space-x-2 bg-white p-2 rounded-lg shadow-sm">
-                    <img src="https://flagcdn.com/w20/id.png" width="20" alt="ID">
-                    <span class="font-bold">ID</span>
+        {{-- HEADER --}}
+        <div class="w-full grid grid-cols-[auto_1fr_auto] items-center mb-8">
+
+            {{-- TITLE --}}
+            <div>
+                <h1 class="text-[26px] font-semibold text-[#f37b7b]">
+                    @yield('title', 'Dashboard')
+                </h1>
+            </div>
+
+            {{-- SEARCH --}}
+            <div class="flex justify-center">
+                <div class="relative w-[420px] max-w-full">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[#f37b7b] text-[14px]"></i>
+
+                    <form method="GET" action="{{ route('katalog') }}">
+                        <input type="text"
+                               name="search"
+                               value="{{ request('search') }}"
+                               placeholder="Cari..."
+                               class="w-full h-[38px] pl-10 pr-4 text-[14px] bg-white
+                                      border border-[#f48a8a] rounded-full
+                                      focus:outline-none">
+                    </form>
                 </div>
-                <div class="bg-white p-2 rounded-full shadow-sm text-gray-400">🔔</div>
-                <div class="flex items-center space-x-2 bg-white p-1 pr-4 rounded-full shadow-sm">
-                    <div class="w-8 h-8 bg-pink-200 rounded-full flex items-center justify-center text-xs">Y</div>
-                    <div class="text-[10px]">
-                        <p class="font-bold leading-none">Yolanda</p>
-                        <p class="text-gray-400">Admin</p>
+            </div>
+
+            {{-- RIGHT MENU --}}
+            <div class="flex items-center gap-[15px]">
+
+                {{-- LANGUAGE --}}
+                <div class="flex items-center gap-3 bg-white px-4 h-[56px]
+                            rounded-2xl shadow-md min-w-[160px]">
+                    <img src="https://flagcdn.com/w20/id.png"
+                         class="w-[26px] h-[26px] rounded-full object-cover shadow">
+                    <span class="font-semibold text-[14px]">ID</span>
+                    <i class="fa-solid fa-chevron-down ml-auto text-[#f37b7b] text-[14px]"></i>
+                </div>
+
+                {{-- NOTIFICATION --}}
+                <div class="text-[#f37b7b] text-[20px] cursor-pointer">
+                    <i class="fa-regular fa-bell"></i>
+                </div>
+
+                {{-- PROFILE --}}
+                <div class="flex items-center gap-3 bg-white px-4 h-[56px]
+                            rounded-2xl shadow-md min-w-[160px]">
+
+                    <div class="w-[26px] h-[26px] rounded-full bg-[#f37b7b]
+                                text-white flex items-center justify-center
+                                text-[13px] font-semibold">
+                        Y
                     </div>
+
+                    <div class="leading-tight">
+                        <div class="font-semibold text-[14px]">Yolanda</div>
+                        <div class="text-[12px] text-gray-400">Admin</div>
+                    </div>
+
+                    <i class="fa-solid fa-chevron-down ml-auto text-[#f37b7b] text-[14px]"></i>
                 </div>
+
             </div>
         </div>
 
+        {{-- PAGE CONTENT --}}
         @yield('content')
+
     </main>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </body>
 </html>

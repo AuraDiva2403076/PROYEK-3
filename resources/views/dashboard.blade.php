@@ -51,7 +51,7 @@
             <div class="space-y-4">
                 @foreach([90, 70, 50, 20] as $width)
                 <div class="w-full bg-gray-50 h-3 rounded-full overflow-hidden">
-                    <div class="bg-pink-400 h-full" style="width: {{ $width }}%"></div>
+                <div class="bg-pink-400 h-full" style="width: {{ $width . '%' }}"></div>
                 </div>
                 @endforeach
             </div>

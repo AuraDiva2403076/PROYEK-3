@@ -4,12 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProdukController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $produks = Produk::latest()->paginate(8);
+        $query = Produk::query();
+
+        // 🔍 SEARCH
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_produk', 'like', '%' . $request->search . '%')
+                  ->orWhere('kode_produk', 'like', '%' . $request->search . '%')
+                  ->orWhere('warna', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // 🎯 FILTER
+        if ($request->kategori) {
+            $query->where('kategori', $request->kategori);
+        }
+
+        if ($request->ukuran) {
+            $query->where('ukuran', $request->ukuran);
+        }
+
+        $produks = $query->latest()->paginate(8)->withQueryString();
+
         return view('katalog', compact('produks'));
     }
 
@@ -19,83 +41,51 @@ class ProdukController extends Controller
     }
 
     public function store(Request $request)
-{
-    $gambar = $request->file('gambar')->store('produk','public');
+    {
+        $data = $request->all();
 
-    Produk::create([
-        'kode_produk' => $request->kode_produk,
-        'nama_produk' => $request->nama_produk,
-        'ukuran' => $request->ukuran,
-        'kategori' => $request->kategori,
-        'stok' => $request->stok,
-        'warna' => $request->warna,
-        'harga' => $request->harga,
-        'deskripsi' => $request->deskripsi,
-        'gambar' => $gambar,
-    ]);
+        // Upload gambar
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $request->file('gambar')->store('produk', 'public');
+        }
 
-    return response()->json(['success' => true]);
-}
-public function destroy($id)
-{
-    $produk = Produk::findOrFail($id);
+        Produk::create($data);
 
-    if($produk->gambar){
-        \Storage::disk('public')->delete($produk->gambar);
+        return response()->json(['success' => true]);
     }
 
-    $produk->delete();
+    public function update(Request $request, $id)
+    {
+        $produk = Produk::findOrFail($id);
 
-    return redirect()->route('katalog');
-}
-public function update(Request $request, $id)
-{
-    $produk = Produk::findOrFail($id);
+        $data = $request->all();
 
-    $data = $request->all();
+        if ($request->hasFile('gambar')) {
 
-    if($request->hasFile('gambar')){
-        $gambar = $request->file('gambar')->store('produk','public');
-        $data['gambar'] = $gambar;
+            // hapus gambar lama
+            if ($produk->gambar) {
+                Storage::disk('public')->delete($produk->gambar);
+            }
+
+            // simpan gambar baru
+            $data['gambar'] = $request->file('gambar')->store('produk', 'public');
+        }
+
+        $produk->update($data);
+
+        return response()->json(['success' => true]);
     }
 
-    $produk->update($data);
+    public function destroy($id)
+    {
+        $produk = Produk::findOrFail($id);
 
-    return response()->json(['success' => true]);
-}
-public function katalog(Request $request)
-{
-    $query = Produk::query();
+        if ($produk->gambar) {
+            Storage::disk('public')->delete($produk->gambar);
+        }
 
-    if ($request->kategori) {
-        $query->where('kategori', $request->kategori);
+        $produk->delete();
+
+        return redirect()->route('katalog');
     }
-
-    if ($request->ukuran) {
-        $query->where('ukuran', $request->ukuran);
-    }
-
-    $produks = $query->paginate(10);
-
-    return view('katalog', compact('produks'));
-}
-
-public function search(Request $request)
-{
-    $query = Produk::query();
-
-    if ($request->search) {
-        $query->where(function($q) use ($request) {
-            $q->where('nama_produk', 'like', '%' . $request->search . '%')
-              ->orWhere('kode_produk', 'like', '%' . $request->search . '%')
-              ->orWhere('warna', 'like', '%' . $request->search . '%');
-        });
-    }
-
-    $produks = $query->latest()->paginate(8)->withQueryString();
-
-    return view('katalog', compact('produks'));
-}
-
-
 }
