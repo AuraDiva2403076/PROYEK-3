@@ -24,3 +24,24 @@ Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan
 Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna');
 Route::patch('/pengguna/{id}/status', [PenggunaController::class, 'updateStatus'])
     ->name('pengguna.updateStatus');
+
+Route::prefix('laporan')->name('laporan.')->group(function () {
+    // Laporan Penjualan
+    Route::get('/penjualan', [PenjualanController::class, 'laporan'])
+        ->name('penjualan');
+    Route::get('/penjualan/export', [PenjualanController::class, 'export'])
+        ->name('penjualan.export');
+
+    // Laporan Produk
+    Route::get('/produk', [ProdukController::class, 'laporanProduk'])
+        ->name('produk');
+    Route::get('/produk/export', [ProdukController::class, 'export'])
+        ->name('produk.export');
+
+    // Laporan Pengguna
+    Route::get('/pengguna', [PenggunaController::class, 'laporanPengguna'])
+        ->name('pengguna');
+    Route::get('/pengguna/export', [PenggunaController::class, 'export'])
+        ->name('pengguna.export');
+});
+

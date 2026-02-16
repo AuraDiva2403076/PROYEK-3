@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hara Dashboard</title>
+    <title>@yield('title', 'Hara Dashboard')</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -32,7 +32,7 @@
 
             {{-- TITLE --}}
             <div>
-                <h1 class="text-[26px] font-semibold text-[#f37b7b]">
+                <h1 class="text-[24px] font-semibold text-[#f37b7b]">
                     @yield('title', 'Dashboard')
                 </h1>
             </div>
@@ -40,14 +40,14 @@
             {{-- SEARCH --}}
             <div class="flex justify-center">
                 <div class="relative w-[420px] max-w-full">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[#f37b7b] text-[14px]"></i>
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[#f37b7b] text-[13px]"></i>
 
                     <form method="GET" action="{{ route('katalog') }}">
                         <input type="text"
                                name="search"
                                value="{{ request('search') }}"
                                placeholder="Cari..."
-                               class="w-full h-[38px] pl-10 pr-4 text-[14px] bg-white
+                               class="w-full h-[35px] pl-10 pr-1 text-[12px] bg-white
                                       border border-[#f48a8a] rounded-full
                                       focus:outline-none">
                     </form>
@@ -58,11 +58,11 @@
             <div class="flex items-center gap-[15px]">
 
                 {{-- LANGUAGE --}}
-                <div class="flex items-center gap-3 bg-white px-4 h-[56px]
-                            rounded-2xl shadow-md min-w-[160px]">
+                <div class="flex items-center gap-3 bg-white px-4 h-[50px]
+                            rounded-2xl shadow-md min-w-[130px]">
                     <img src="https://flagcdn.com/w20/id.png"
-                         class="w-[26px] h-[26px] rounded-full object-cover shadow">
-                    <span class="font-semibold text-[14px]">ID</span>
+                         class="w-[24px] h-[24px] rounded-full object-cover shadow">
+                    <span class="font-semibold text-[13px]">ID</span>
                     <i class="fa-solid fa-chevron-down ml-auto text-[#f37b7b] text-[14px]"></i>
                 </div>
 
@@ -72,8 +72,8 @@
                 </div>
 
                 {{-- PROFILE --}}
-                <div class="flex items-center gap-3 bg-white px-4 h-[56px]
-                            rounded-2xl shadow-md min-w-[160px]">
+                <div class="flex items-center gap-3 bg-white px-4 h-[50px]
+                            rounded-2xl shadow-md min-w-[150px]">
 
                     <div class="w-[26px] h-[26px] rounded-full bg-[#f37b7b]
                                 text-white flex items-center justify-center
@@ -82,8 +82,8 @@
                     </div>
 
                     <div class="leading-tight">
-                        <div class="font-semibold text-[14px]">Yolanda</div>
-                        <div class="text-[12px] text-gray-400">Admin</div>
+                        <div class="font-semibold text-[12px] pb-1">Yolanda</div>
+                        <div class="text-[10px] text-gray-400">Admin</div>
                     </div>
 
                     <i class="fa-solid fa-chevron-down ml-auto text-[#f37b7b] text-[14px]"></i>
@@ -96,6 +96,6 @@
         @yield('content')
 
     </main>
-
+    <script src="//unpkg.com/alpinejs" defer></script>
 </body>
 </html>
