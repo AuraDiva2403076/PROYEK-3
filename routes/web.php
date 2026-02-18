@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\RekomendasiController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -24,3 +25,19 @@ Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan
 Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna');
 Route::patch('/pengguna/{id}/status', [PenggunaController::class, 'updateStatus'])
     ->name('pengguna.updateStatus');
+
+    // fitur Ai
+Route::get('/dataset-ai', [RekomendasiController::class, 'index'])
+    ->name('dataset-ai.index');
+
+Route::delete('/dataset-ai/{id}', [RekomendasiController::class, 'destroy'])
+    ->name('dataset-ai.destroy');
+Route::get('/ai', function () {
+    return redirect()->route('dataset-ai.index');
+})->name('ai');
+Route::post('/dataset-ai/predict', [RekomendasiController::class, 'predict'])->name('dataset-ai.predict');
+Route::get('/dataset-ai/{id}/edit', [RekomendasiController::class, 'edit'])
+    ->name('dataset-ai.edit');
+
+Route::put('/dataset-ai/{id}', [RekomendasiController::class, 'update'])
+    ->name('dataset-ai.update');
