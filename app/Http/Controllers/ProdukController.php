@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ProdukExport;
 
 class ProdukController extends Controller
 {
+    // =======================
+    // CRUD PRODUK
+    // =======================
     public function index(Request $request)
     {
         $query = Produk::query();
@@ -87,5 +93,68 @@ class ProdukController extends Controller
         $produk->delete();
 
         return redirect()->route('katalog');
+    }
+
+    // =======================
+    // LAPORAN PRODUK
+    // =======================
+    public function laporanProduk(Request $request)
+    {
+        $query = Produk::query();
+
+        // 🔍 FILTER PRODUK
+        if ($request->produk) {
+            $query->where('id', $request->produk);
+        }
+
+        if ($request->kategori) {
+            $query->where('kategori', $request->kategori);
+        }
+
+        if ($request->ukuran) {
+            $query->where('ukuran', $request->ukuran);
+        }
+
+        if ($request->warna) {
+            $query->where('warna', $request->warna);
+        }
+
+        $data = $query->latest()->paginate(10)->withQueryString();
+
+        $produk = Produk::all(); // untuk dropdown filter
+
+        return view('laporan.produk', compact('data', 'produk'));
+    }
+
+    public function export(Request $request)
+    {
+        $query = Produk::query();
+
+        // Filter biasa
+        if ($request->produk) $query->where('id', $request->produk);
+        if ($request->kategori) $query->where('kategori', $request->kategori);
+        if ($request->ukuran) $query->where('ukuran', $request->ukuran);
+        if ($request->warna) $query->where('warna', $request->warna);
+
+        // 🔹 FILTER BY CHECKBOX SELECTION
+        if ($request->ids) {
+            $ids = json_decode($request->ids); // convert JSON ke array
+            if (is_array($ids) && count($ids) > 0) {
+                $query->whereIn('id', $ids);
+            }
+        }
+
+        $data = $query->get();
+
+        $type = $request->type ?? 'pdf';
+
+        if ($type == 'pdf') {
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('laporan.produk_pdf', compact('data'));
+            return $pdf->download('laporan_produk.pdf');
+        } elseif ($type == 'excel') {
+            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ProdukExport($data), 'laporan_produk.xlsx');
+        } elseif ($type == 'csv') {
+            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ProdukExport($data), 'laporan_produk.csv');
+        }
     }
 }
