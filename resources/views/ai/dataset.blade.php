@@ -4,7 +4,10 @@
 
 @section('content')
 
-<div class="bg-white rounded-3xl shadow-lg p-8">
+<div class="space-y-8"> {{-- Tambahkan ini --}}
+
+    <div class="bg-white rounded-3xl shadow-lg p-8">
+
 
     <h2 class="text-lg font-semibold text-gray-700 mb-6">
         Daftar Rekomendasi Hijab
@@ -125,20 +128,26 @@
                         {{ $kesanAI }}
                     </td>
 
-                    <td class="px-4 py-4 border text-center space-x-2">
+                    <td class="px-4 py-6 border text-center">
+    <div class="flex justify-center items-center gap-4 text-xl">
+        
+        <a href="{{ route('dataset-ai.edit',$data->id) }}"
+           class="text-blue-500 hover:text-blue-600 transition duration-200">
+            ✏
+        </a>
 
-                        <a href="{{ route('dataset-ai.edit',$data->id) }}"
-                           class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-xs">
-                            ✏
-                        </a>
+        <form action="{{ route('dataset-ai.destroy',$data->id) }}"
+              method="POST">
+            @csrf
+            @method('DELETE')
+            <button class="text-red-500 hover:text-red-600 transition duration-200">
+                🗑
+            </button>
+        </form>
 
-                        <form action="{{ route('dataset-ai.destroy',$data->id) }}"
-                              method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-xs">
-                                🗑
-                            </button>
+    </div>
+</td>
+
                         </form>
 
                     </td>
@@ -237,4 +246,6 @@
 
 </div>
 
+    </div> {{-- Tutup space-y-8 --}}
 @endsection
+
