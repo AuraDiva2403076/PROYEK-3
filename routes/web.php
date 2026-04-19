@@ -5,6 +5,7 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\RekomendasiController;
+use App\Http\Controllers\ImageController;
 
 Route::get('/', function () {
     return view('dashboard');
@@ -63,3 +64,6 @@ Route::prefix('laporan')->name('laporan.')->group(function () {
         ->name('pengguna.export');
 });
 
+
+
+Route::get('/produk-image/{filename}', [ImageController::class, 'show']);
