@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ProdukExport;
+use App\Models\ProdukGambar;
+use App\Models\ProdukUkuran;
 
 class ProdukController extends Controller
 {
@@ -36,7 +38,7 @@ class ProdukController extends Controller
             $query->where('ukuran', $request->ukuran);
         }
 
-        $produks = $query->latest()->paginate(8)->withQueryString();
+        $produks = $query->with(['ukurans', 'gambars'])->latest()->paginate(8)->withQueryString();
 
         return view('katalog', compact('produks'));
     }
@@ -48,14 +50,52 @@ class ProdukController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all();
+        $request->validate([
+            'kode_produk' => 'required',
+            'nama_produk' => 'required',
+            'kategori' => 'required',
+            'warna' => 'nullable',
+            'deskripsi' => 'nullable',
 
-        // Upload gambar
-        if ($request->hasFile('gambar')) {
-            $data['gambar'] = $request->file('gambar')->store('produk', 'public');
+            'ukuran' => 'required|array',
+            'ukuran.*' => 'required|string',
+            'stok_ukuran' => 'required|array',
+            'harga_ukuran' => 'required|array',
+
+            'gambar' => 'nullable|array',
+            'gambar.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $data = $request->except([
+            'gambar',
+            'ukuran',
+            'stok',
+            'harga',
+            'stok_ukuran',
+            'harga_ukuran',
+        ]);
+
+        $produk = Produk::create($data);
+
+        foreach ($request->ukuran as $ukuran) {
+            ProdukUkuran::create([
+                'produk_id' => $produk->id,
+                'ukuran' => $ukuran,
+                'stok' => $request->stok_ukuran[$ukuran] ?? 0,
+                'harga' => $request->harga_ukuran[$ukuran] ?? 0,
+            ]);
         }
 
-        Produk::create($data);
+        if ($request->hasFile('gambar')) {
+            foreach ($request->file('gambar') as $file) {
+                $path = $file->store('produk', 'public');
+
+                ProdukGambar::create([
+                    'produk_id' => $produk->id,
+                    'gambar' => $path,
+                ]);
+            }
+        }
 
         return response()->json(['success' => true]);
     }
