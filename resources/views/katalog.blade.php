@@ -11,10 +11,55 @@
         <div class="flex gap-3 relative">
 
             <!-- ADD -->
-            <button onclick="openModal()"
+            <button onclick="openModalCreate()"
                 class="bg-pink-400 text-white px-4 py-2 rounded-xl text-sm">
                 + Add Produk
             </button>
+
+            <div id="previewModal"
+                class="fixed top-0 left-0 w-screen h-screen bg-black/40 hidden items-center justify-center z-[99999]">
+
+                <div class="bg-white w-[700px] rounded-2xl p-8 relative max-h-[90vh] overflow-y-auto">
+
+                    <button onclick="closePreview()"
+                        class="absolute top-4 right-4 text-gray-500 text-xl">
+                        ✕
+                    </button>
+
+                    <div id="previewProdukGambarContainer"
+                        class="grid grid-cols-3 gap-3 mb-5">
+                    </div>
+
+                    <h2 id="previewProdukNama"
+                        class="text-2xl font-bold text-pink-500 mb-1"></h2>
+
+                    <p id="previewProdukKode"
+                        class="text-sm text-gray-400 mb-4"></p>
+
+                    <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+                        <div class="bg-pink-50 p-3 rounded-xl">
+                            <p class="text-gray-400">Kategori</p>
+                            <p id="previewProdukKategori" class="font-semibold"></p>
+                        </div>
+
+                        <div class="bg-pink-50 p-3 rounded-xl">
+                            <p class="text-gray-400">Warna</p>
+                            <p id="previewProdukWarna" class="font-semibold"></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-pink-50 p-4 rounded-xl mb-4">
+                        <p class="text-gray-400 text-sm mb-2">Ukuran, Stok & Harga</p>
+                        <div id="previewProdukUkuran" class="text-sm font-medium"></div>
+                    </div>
+
+                    <div>
+                        <p class="text-gray-400 text-sm mb-2">Deskripsi</p>
+                        <p id="previewProdukDeskripsi"
+                        class="text-sm leading-relaxed whitespace-pre-line text-gray-700"></p>
+                    </div>
+                </div>
+            </div>
 
             <!-- FILTER -->
             <button onclick="toggleFilter()"
@@ -86,7 +131,7 @@
 
            <thead>
     <tr class="bg-pink-50 text-gray-600">
-        <th class="border border-pink-200 px-3 py-3">Nomor</th>
+        <th class="border border-pink-200 px-3 py-3">No</th>
         <th class="border border-pink-200 px-3 py-3">Kode</th>
         <th class="border border-pink-200 px-3 py-3">Gambar</th>
         <th class="border border-pink-200 px-3 py-3">Nama</th>
@@ -103,6 +148,10 @@
 <tbody>
 @forelse($produks as $produk)
 <tr class="hover:bg-pink-50 transition">
+    @php
+        $ukuranTerpilih = $produk->ukurans
+            ->filter(fn($u) => $u->harga !== null && $u->harga > 0);
+    @endphp
 
 <td class="border border-pink-100 px-3 py-2">
     {{ $loop->iteration }}
@@ -126,7 +175,7 @@
 </td>
 
 <td class="border border-pink-100 px-3 py-2">
-    {{ $produk->ukurans->pluck('ukuran')->join(', ') }}
+    {{ $ukuranTerpilih->pluck('ukuran')->join(', ') }}
 </td>
 
 <td class="border border-pink-100 px-3 py-2">
@@ -135,14 +184,19 @@
 
 <td class="border border-pink-100 px-3 py-2 text-pink-500 font-semibold">
     @php
-        $minHarga = $produk->ukurans->min('harga');
-        $maxHarga = $produk->ukurans->max('harga');
+        $ukuranTerpilih = $produk->ukurans
+            ->filter(fn($u) => $u->harga !== null && $u->harga > 0);
+
+        $minHarga = $ukuranTerpilih->min('harga');
+        $maxHarga = $ukuranTerpilih->max('harga');
     @endphp
 
-    @if($minHarga == $maxHarga)
-        Rp{{ number_format($minHarga) }}
+    @if($ukuranTerpilih->isEmpty())
+        -
+    @elseif($minHarga == $maxHarga)
+        Rp{{ number_format($minHarga, 0, ',', '.') }}
     @else
-        Rp{{ number_format($minHarga) }} - Rp{{ number_format($maxHarga) }}
+        Rp{{ number_format($minHarga, 0, ',', '.') }} - Rp{{ number_format($maxHarga, 0, ',', '.') }}
     @endif
 </td>
 
@@ -158,33 +212,49 @@
 </td>
 
 <td class="border border-pink-100 px-3 py-2 truncate max-w-[150px] text-gray-500">
-    {{ $produk->deskripsi }}
+    {!! json_encode($produk->deskripsi) !!}
 </td>
 
 <td class="border border-pink-100 px-3 py-2 text-center space-x-3">
-
-    <!-- EDIT ICON -->
+    <!-- VIEW ICON -->
     <button
-        onclick="editProduk(
-            '{{ $produk->id }}',
-            '{{ $produk->kode_produk }}',
-            '{{ $produk->nama_produk }}',
-            '{{ $produk->kategori }}',
-            '{{ $produk->warna }}',
-            `{{ $produk->deskripsi }}`
-        )"
-        class="text-yellow-500 hover:text-yellow-600 text-lg transition"
+        class="preview-btn text-blue-500 hover:text-blue-600 text-lg transition"
+        data-kode="{{ $produk->kode_produk }}"
+        data-nama="{{ $produk->nama_produk }}"
+        data-kategori="{{ $produk->kategori }}"
+        data-warna="{{ $produk->warna }}"
+        data-deskripsi="{{ $produk->deskripsi }}"
+        data-ukuran="{!! $ukuranTerpilih
+            ->map(fn($u) => $u->ukuran . ' - Stok: ' . $u->stok . ' - Harga: Rp' . number_format($u->harga, 0, ',', '.'))
+            ->join(' | ') !!}"
+        data-gambar='@json($produk->gambars->pluck("gambar"))'
+        title="Preview">
+        <i class="fa-solid fa-eye"></i>
+    </button>
+
+    <button
+        class="edit-btn text-yellow-500 hover:text-yellow-600 text-lg transition"
+        data-id="{{ $produk->id }}"
+        data-kode="{{ $produk->kode_produk }}"
+        data-nama="{{ $produk->nama_produk }}"
+        data-kategori="{{ $produk->kategori }}"
+        data-warna="{{ $produk->warna }}"
+        data-deskripsi="{{ $produk->deskripsi }}"
+        data-ukurans='@json($produk->ukurans)'
+        data-gambars='@json($produk->gambars)'
         title="Edit">
         <i class="fa-solid fa-pen-to-square"></i>
     </button>
 
     <!-- DELETE ICON -->
     <form action="{{ route('produk.destroy', $produk->id) }}"
-          method="POST" class="inline">
+        method="POST" class="inline">
         @csrf
         @method('DELETE')
-        <button onclick="return confirm('Yakin hapus produk?')"
-            class="text-red-500 hover:text-red-600 text-lg transition"
+
+        <button
+            type="button"
+            class="delete-btn text-red-500 hover:text-red-600 text-lg transition"
             title="Hapus">
             <i class="fa-solid fa-trash"></i>
         </button>
@@ -241,8 +311,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function renderDefaultPreview() {
         previewContainer.innerHTML = `
-            <img src="{{ asset('images/grup.jpg') }}"
-                class="rounded-xl w-full h-24 object-cover">
+            <div class="w-full h-24 border-2 border-dashed border-pink-300
+                rounded-xl flex flex-col items-center justify-center text-pink-400 text-sm">
+
+                <i class="fa-solid fa-image text-xl mb-1"></i>
+                <span>Belum ada gambar</span>
+            </div>
         `;
     }
 
@@ -285,7 +359,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    window.openModal = function () {
+    window.openModalCreate = function () {
         form.reset();
         delete form.dataset.editId;
 
@@ -293,6 +367,16 @@ document.addEventListener("DOMContentLoaded", function () {
         inputFile.value = "";
         renderDefaultPreview();
 
+        document.querySelectorAll('input[name="ukuran[]"]').forEach(cb => cb.checked = false);
+        document.querySelectorAll('input[name^="stok_ukuran"]').forEach(input => input.value = "");
+        document.querySelectorAll('input[name^="harga_ukuran"]').forEach(input => input.value = "");
+
+        const modal = document.getElementById("modalProduk");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+    }
+
+    window.openModalEdit = function () {
         const modal = document.getElementById("modalProduk");
         modal.classList.remove("hidden");
         modal.classList.add("flex");
@@ -392,13 +476,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+document.addEventListener("click", function(e){
+    const btn = e.target.closest(".preview-btn");
+    if(!btn) return;
+
+    const ukuranHtml = btn.dataset.ukuran.replaceAll(" | ", "<br>");
+
+    previewProduk(
+        btn.dataset.kode,
+        btn.dataset.nama,
+        btn.dataset.kategori,
+        btn.dataset.warna,
+        btn.dataset.deskripsi,
+        ukuranHtml,
+        btn.dataset.gambar
+    );
+});
+
 window.editProduk = function (
-    id, kode, nama, kategori, warna, deskripsi
+    id, kode, nama, kategori, warna, deskripsi, ukurans, gambars
 ) {
-    openModal();
+    openModalEdit();
 
     const form = document.getElementById("formProduk");
-
     form.dataset.editId = id;
 
     form.kode_produk.value = kode;
@@ -406,6 +506,118 @@ window.editProduk = function (
     form.kategori.value = kategori;
     form.warna.value = warna;
     form.deskripsi.value = deskripsi;
+
+    document.querySelectorAll('input[name="ukuran[]"]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('input[name^="stok_ukuran"]').forEach(input => input.value = "");
+    document.querySelectorAll('input[name^="harga_ukuran"]').forEach(input => input.value = "");
+
+    ukurans.forEach(item => {
+        const checkbox = document.querySelector(`input[name="ukuran[]"][value="${item.ukuran}"]`);
+        const stokInput = document.querySelector(`input[name="stok_ukuran[${item.ukuran}]"]`);
+        const hargaInput = document.querySelector(`input[name="harga_ukuran[${item.ukuran}]"]`);
+
+        if (checkbox) checkbox.checked = true;
+        if (stokInput) stokInput.value = item.stok;
+        if (hargaInput) hargaInput.value = item.harga;
+    });
+
+    const previewContainer = document.getElementById("previewContainer");
+    previewContainer.innerHTML = "";
+
+    if (gambars.length > 0) {
+        gambars.forEach(item => {
+            const img = document.createElement("img");
+            img.src = "/storage/" + item.gambar;
+            img.className = "w-24 h-24 object-contain rounded-xl border border-pink-200 bg-white p-1";
+            previewContainer.appendChild(img);
+        });
+    } else {
+        renderDefaultPreview();
+    }
+};
+
+document.addEventListener("click", function(e){
+    const btn = e.target.closest(".edit-btn");
+    if(!btn) return;
+
+    editProduk(
+        btn.dataset.id,
+        btn.dataset.kode,
+        btn.dataset.nama,
+        btn.dataset.kategori,
+        btn.dataset.warna,
+        btn.dataset.deskripsi,
+        JSON.parse(btn.dataset.ukurans),
+        JSON.parse(btn.dataset.gambars)
+    );
+});
+
+document.addEventListener("click", function(e){
+    const btn = e.target.closest(".delete-btn");
+    if(!btn) return;
+
+    e.preventDefault();
+
+    if(confirm("Yakin hapus produk ini?")){
+        btn.closest("form").submit();
+    }
+});
+
+window.previewProduk = function (
+    kode, nama, kategori, warna, deskripsi, ukuranHtml, gambar
+) {
+    document.getElementById("previewProdukKode").innerText = kode;
+    document.getElementById("previewProdukNama").innerText = nama;
+    document.getElementById("previewProdukKategori").innerText = kategori;
+    document.getElementById("previewProdukWarna").innerText = warna;
+    document.getElementById("previewProdukDeskripsi").innerText = deskripsi;
+    document.getElementById("previewProdukUkuran").innerHTML = ukuranHtml;
+    const container = document.getElementById("previewProdukGambarContainer");
+    container.innerHTML = "";
+
+    let images = [];
+
+    try {
+        images = JSON.parse(gambar);
+    } catch (e) {
+        images = [];
+    }
+
+    // kalau kosong
+    if (images.length === 0) {
+        container.innerHTML = `
+            <div class="col-span-3 bg-pink-100 h-40 rounded-xl flex items-center justify-center text-gray-400">
+                Tidak ada gambar
+            </div>
+        `;
+        return;
+    }
+
+    images.forEach(img => {
+        const el = document.createElement("img");
+        el.src = "/storage/" + img;
+
+        el.className = `
+            w-full h-32
+            object-contain
+            bg-white
+            rounded-xl
+            border border-pink-200
+            p-1
+        `;
+
+        container.appendChild(el);
+    });
+
+    const modal = document.getElementById("previewModal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+};
+
+window.closePreview = function () {
+    const modal = document.getElementById("previewModal");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
 };
 
 function loadProduk() {

@@ -45,7 +45,7 @@
             <option>Pashmina</option>
             <option>Hijab Inner 2 In 1</option>
             <option>Bergo Instant</option>
-            <option>Syar'i</option>
+            <option>Instant Syar'i</option>
             <option>Hijab Anak</option>
         </select>
 

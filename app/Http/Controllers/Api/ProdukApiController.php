@@ -8,26 +8,45 @@ use App\Models\Produk;
 class ProdukApiController extends Controller
 {
   public function index()
-{
-    $produks = Produk::latest()->get()->map(function ($item) {
-        return [
-            'id' => $item->id,
-            'kode_produk' => $item->kode_produk,
-            'name' => $item->nama_produk,
-            'ukuran' => $item->ukuran,
-            'kategori' => $item->kategori,
-            'price' => (int) $item->harga,
-            'warna' => $item->warna,
-            'stok' => (int) $item->stok,
-            'deskripsi' => $item->deskripsi,
-            'image' => $item->gambar ? url('produk-image/' . basename($item->gambar)) : null,
-            'created_at' => $item->created_at,
-        ];
-    });
+    {
+        $produks = Produk::with(['gambars', 'ukurans'])
+            ->latest()
+            ->get()
+            ->map(function ($item) {
+                $ukuranTerpilih = $item->ukurans
+                    ->filter(fn($u) => $u->harga !== null && $u->harga > 0);
 
-    return response()->json([
-        'success' => true,
-        'data' => $produks,
-    ]);
-}
+                $gambarPertama = $item->gambars->first();
+
+                return [
+                    'id' => $item->id,
+                    'kode_produk' => $item->kode_produk,
+                    'name' => $item->nama_produk,
+                    'kategori' => $item->kategori,
+                    'warna' => $item->warna,
+                    'deskripsi' => $item->deskripsi,
+
+                    'ukurans' => $ukuranTerpilih->map(fn($u) => [
+                        'ukuran' => $u->ukuran,
+                        'stok' => $u->stok,
+                        'harga' => $u->harga,
+                    ])->values(),
+
+                    'price' => (int) ($ukuranTerpilih->min('harga') ?? 0),
+
+                    'gambars' => $item->gambars->map(fn($g) =>
+                        asset('storage/' . $g->gambar)
+                    )->values(),
+
+                    'image' => $gambarPertama
+                        ? asset('storage/' . $gambarPertama->gambar)
+                        : null,
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'data' => $produks,
+        ]);
     }
+}
