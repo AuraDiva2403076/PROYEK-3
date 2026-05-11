@@ -31,16 +31,15 @@
     </div>
 
     {{-- Batal --}}
-<div class="bg-white p-5 rounded-2xl shadow-sm border border-pink-200 flex items-center gap-4">
-    <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-red-50">
-        <i class="bx bx-x-circle text-2xl text-red-500"></i>
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-pink-200 flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-red-50">
+            <i class="bx bx-x-circle text-2xl text-red-500"></i>
+        </div>
+        <div>
+            <p class="text-sm text-gray-400">Batal</p>
+            <h2 class="text-2xl font-semibold text-gray-800">{{ $batal }}</h2>
+        </div>
     </div>
-    <div>
-        <p class="text-sm text-gray-400">Batal</p>
-        <h2 class="text-2xl font-semibold text-gray-800">{{ $batal }}</h2>
-    </div>
-</div>
-
 
     {{-- Dalam Proses --}}
     <div class="bg-white p-5 rounded-2xl shadow-sm border border-pink-200 flex items-center gap-4">
@@ -80,67 +79,74 @@
 
 </div>
 
+{{-- TABEL --}}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+    <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-600">
+            <tr>
+                <th class="p-3"><input type="checkbox"></th>
+                <th class="p-3 text-left">ID</th>
+                <th class="p-3 text-left">Id Produk</th>
+                <th class="p-3 text-left">Id Pelanggan</th>
+                <th class="p-3 text-left">Jumlah</th>
+                <th class="p-3 text-left">Harga</th>
+                <th class="p-3 text-left">Total</th>
+                <th class="p-3 text-left">Tanggal</th>
+                <th class="p-3 text-left">Status</th>
+                <th class="p-3 text-left">Metode</th>
+                <th class="p-3 text-left">Aksi</th>
+            </tr>
+        </thead>
 
-    {{-- TABEL --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <table class="w-full text-sm">
-            <thead class="bg-gray-50 text-gray-600">
-                <tr>
-                    <th class="p-3"><input type="checkbox"></th>
-                    <th class="p-3 text-left">ID</th>
-                    <th class="p-3 text-left">Id Produk</th>
-                    <th class="p-3 text-left">Id Pelanggan</th>
-                    <th class="p-3 text-left">Jumlah</th>
-                    <th class="p-3 text-left">Harga</th>
-                    <th class="p-3 text-left">Total</th>
-                    <th class="p-3 text-left">Tanggal</th>
-                    <th class="p-3 text-left">Status</th>
-                    <th class="p-3 text-left">Aksi</th>
-                </tr>
-            </thead>
+        <tbody class="divide-y">
+            @foreach($data as $item)
+            <tr class="hover:bg-gray-50">
+                <td class="p-3"><input type="checkbox"></td>
+                <td class="p-3 font-medium text-gray-700">{{ $item->kode_pesanan }}</td>
+                <td class="p-3">{{ $item->id_produk }}</td>
+                <td class="p-3">{{ $item->id_pelanggan }}</td>
+                <td class="p-3">{{ $item->jumlah }}</td>
+                <td class="p-3">Rp{{ number_format($item->harga) }}</td>
+                <td class="p-3">Rp{{ number_format($item->total) }}</td>
+                <td class="p-3">{{ $item->tanggal }}</td>
 
-            <tbody class="divide-y">
-                @foreach($data as $item)
-                <tr class="hover:bg-gray-50">
-                    <td class="p-3"><input type="checkbox"></td>
-                    <td class="p-3 font-medium text-gray-700">{{ $item->kode_pesanan }}</td>
-                    <td class="p-3">{{ $item->id_produk }}</td>
-                    <td class="p-3">{{ $item->id_pelanggan }}</td>
-                    <td class="p-3">{{ $item->jumlah }}</td>
-                    <td class="p-3">Rp{{ number_format($item->harga) }}</td>
-                    <td class="p-3">Rp{{ number_format($item->total) }}</td>
-                    <td class="p-3">{{ $item->tanggal }}</td>
+                {{-- STATUS BADGE --}}
+                <td class="p-3">
+                    @if($item->status == 'Selesai')
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-600">Selesai</span>
+                    @elseif($item->status == 'Batal')
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-600">Batal</span>
+                    @else
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-600">Dalam Proses</span>
+                    @endif
+                </td>
 
-                    {{-- STATUS BADGE --}}
-                    <td class="p-3">
-                        @if($item->status == 'Selesai')
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-600">Selesai</span>
-                        @elseif($item->status == 'Batal')
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-600">Batal</span>
-                        @else
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-600">Dalam Proses</span>
-                        @endif
-                    </td>
+                {{-- METODE --}}
+                <td class="p-3 text-gray-700">
+                    {{ $item->metode ?? '-' }}
+                </td>
 
-                    {{-- AKSI --}}
-                    <td class="p-3 flex gap-2">
+                {{-- AKSI --}}
+                <td class="p-3">
+                    <div class="flex gap-2">
                         <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200">
                             <i class='bx bx-pencil'></i>
                         </button>
                         <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200">
                             <i class='bx bx-trash'></i>
                         </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                    </div>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-        {{-- PAGINATION TENGAH --}}
-        <div class="p-4 flex justify-center">
-            {{ $data->links() }}
-        </div>
+    {{-- PAGINATION TENGAH --}}
+    <div class="p-4 flex justify-center">
+        {{ $data->links() }}
     </div>
+</div>
 
 </div>
 @endsection
