@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -120,6 +121,38 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Email berhasil diverifikasi',
+            'user' => $user,
+        ]);
+    }
+
+    public function googleLogin(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'google_id' => 'required',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make(Str::random(16)),
+                'google_id' => $request->google_id,
+                'email_verified_at' => now(),
+            ]);
+        } else {
+            $user->update([
+                'google_id' => $request->google_id,
+                'email_verified_at' => $user->email_verified_at ?? now(),
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Login Google berhasil',
             'user' => $user,
         ]);
     }
