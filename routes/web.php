@@ -6,10 +6,18 @@ use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\RekomendasiController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SearchController;
 
-Route::get('/', function () {
-    return view('dashboard');
-})->name('dashboard');
+
+Route::get('/', [DashboardController::class, 'index'])
+    ->name('dashboard');
+
+Route::get('/dashboard/data', [DashboardController::class, 'data'])
+    ->name('dashboard.data');
+    
+
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 Route::get('/katalog', [ProdukController::class, 'index'])->name('katalog');
 
@@ -67,3 +75,5 @@ Route::prefix('laporan')->name('laporan.')->group(function () {
 
 
 Route::get('/produk-image/{filename}', [ImageController::class, 'show']);
+
+
