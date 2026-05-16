@@ -6,6 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Penjualan extends Model
 {
+
+    protected $fillable = [
+        'kode_pesanan',
+        'id_produk',
+        'id_pelanggan',
+        'jumlah',
+        'harga',
+        'total',
+        'tanggal',
+        'status',
+        'metode',
+    ];
+    
     public function scopeFilter($query, $request)
     {
         if ($request->start_date && $request->end_date) {
