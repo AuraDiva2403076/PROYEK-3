@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #FDF7F7; }
         .card-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
