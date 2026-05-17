@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ProdukApiController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PenjualanApiController;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\Api\AnalisisApiController;
 
 Route::get('/produk', [ProdukApiController::class, 'index']);
 
@@ -22,3 +23,6 @@ Route::get('/check-user/{id}', [AuthController::class, 'checkUser']);
 Route::post('/penjualan', [PenjualanApiController::class, 'store']);
 
 Route::post('/update-profile', [PenggunaController::class, 'updateProfile']);
+
+Route::post('/analisis', [AnalisisApiController::class, 'store']);
+Route::get('/analisis/history/{user_id}', [AnalisisApiController::class, 'history']);
