@@ -15,7 +15,7 @@ Route::get('/', [DashboardController::class, 'index'])
 
 Route::get('/dashboard/data', [DashboardController::class, 'data'])
     ->name('dashboard.data');
-    
+
 
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
@@ -32,7 +32,7 @@ Route::get('/pengaturan', function () {
 
 Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan');
 Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna');
-Route::patch('/pengguna/{id}/status', [PenggunaController::class, 'updateStatus'])
+Route::post('/pengguna/{id}/status', [PenggunaController::class, 'updateStatus'])
     ->name('pengguna.updateStatus');
 
 

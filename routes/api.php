@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProdukApiController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PenjualanApiController;
+use App\Http\Controllers\PenggunaController;
 
 Route::get('/produk', [ProdukApiController::class, 'index']);
 
@@ -20,3 +21,4 @@ Route::get('/check-user/{id}', [AuthController::class, 'checkUser']);
 
 Route::post('/penjualan', [PenjualanApiController::class, 'store']);
 
+Route::post('/update-profile', [PenggunaController::class, 'updateProfile']);

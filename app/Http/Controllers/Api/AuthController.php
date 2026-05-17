@@ -70,6 +70,14 @@ class AuthController extends Controller
             ], 404);
         }
 
+        if (($user->status ?? 'Aktif') === 'Diblokir') {
+            return response()->json([
+                'success' => false,
+                'status' => 'blocked',
+                'message' => 'Akun Anda telah diblokir oleh admin.',
+            ], 403);
+        }
+
         if (!Hash::check($request->password, $user->password)) {
             return response()->json([
                 'success' => false,
@@ -197,6 +205,14 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
+        if ($user && ($user->status ?? 'Aktif') === 'Diblokir') {
+            return response()->json([
+                'success' => false,
+                'status' => 'blocked',
+                'message' => 'Akun Anda telah diblokir oleh admin.',
+            ], 403);
+        }
+
         if (!$user) {
             $user = User::create([
                 'name' => $request->name,
@@ -222,6 +238,13 @@ class AuthController extends Controller
     public function checkUser($id)
     {
         $user = User::find($id);
+
+        if (($user->status ?? 'Aktif') === 'Diblokir') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akun diblokir',
+            ], 403);
+        }
 
         if (!$user) {
             return response()->json([
