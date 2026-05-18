@@ -15,35 +15,24 @@
 
     @php
         $colorMap = [
-            'hitam' => '#000000',
-            'putih' => '#ffffff',
-            'merah' => '#ef4444',
-            'merah marun' => '#800000',
-            'navy' => '#1e3a8a',
-            'ungu' => '#7c3aed',
-            'kuning' => '#eab308',
-            'merah muda' => '#fb7185',
-            'pink' => '#ec4899',
-            'pink terang' => '#db2777',
-            'hijau muda' => '#4ade80',
-            'mint green' => '#34d399',
-            'baby blue' => '#60a5fa',
-            'soft pink' => '#f9a8d4',
-            'dusty pink' => '#d8a7b1',
-            'lavender' => '#c084fc',
-            'sky blue' => '#38bdf8',
-            'terracotta' => '#e2725b',
-            'olive green' => '#65a30d',
-            'mustard yellow' => '#facc15',
-            'emerald green' => '#10b981',
-            'gold' => '#fbbf24',
-            'bronze' => '#b45309',
-            'silver' => '#9ca3af',
-            'coksu' => '#d2b48c',
-            'beige' => '#d6c5b4',
-            'cream' => '#f5f5dc',
-            'cokelat muda' => '#a16207',
-            'biru' => '#3b82f6',
+            'ivory' => '#fffff0',
+            'taupe' => '#8b8589',
+            'dark choco' => '#3b241c',
+            'black' => '#000000',
+            'shadow' => '#4a4a4a',
+            'grey latte' => '#b8aea3',
+            'walnute' => '#6b4423',
+            'dark brown' => '#4a2c2a',
+            'pearl' => '#f8f6f0',
+            'charcoal' => '#36454f',
+            'smoke' => '#848884',
+            'biscuit' => '#ddb892',
+            'soft yellow' => '#fff59d',
+            'golden brown' => '#996515',
+            'grey seal' => '#8a8d8f',
+            'latte' => '#c8a27a',
+            'coral' => '#ff7f50',
+            'peach' => '#ffccbc',
         ];
     @endphp
 
@@ -130,7 +119,7 @@
 
                     <td class="px-4 py-6 border text-center">
     <div class="flex justify-center items-center gap-4 text-xl">
-        
+
         <a href="{{ route('dataset-ai.edit',$data->id) }}"
            class="text-blue-500 hover:text-blue-600 transition duration-200">
             ✏
@@ -190,7 +179,10 @@
                     <tr class="border-b text-gray-400 uppercase text-xs tracking-wider">
                         <th class="py-4">Id Pelanggan</th>
                         <th>Warna Kulit</th>
+                        <th>Rekomendasi Warna</th>
                         <th>Foto Wajah</th>
+                        <th>Brightness</th>
+                        <th>LAB L</th>
                         <th>Tanggal</th>
                         <th class="text-center">Aksi</th>
                     </tr>
@@ -210,8 +202,38 @@
                         </td>
 
                         <td class="py-6">
-                            <img src="{{ asset('storage/'.$item->foto) }}"
-                                 class="w-12 h-12 rounded-full object-cover border">
+                            <div class="flex flex-wrap gap-2 max-w-xs">
+                                @foreach(explode(',', $item->rekomendasi_warna ?? '') as $warna)
+                                    @php
+                                        $key = strtolower(trim($warna));
+                                        $bg = $colorMap[$key] ?? '#cccccc';
+                                    @endphp
+
+                                    @if(trim($warna) !== '')
+                                        <span class="px-3 py-1 text-xs rounded-full text-white shadow"
+                                            style="background-color: {{ $bg }};">
+                                            {{ trim($warna) }}
+                                        </span>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </td>
+
+                        <td class="py-6">
+                            @if($item->foto)
+                                <img src="{{ asset('storage/'.$item->foto) }}"
+                                    class="w-12 h-12 rounded-full object-cover border">
+                            @else
+                                <span class="text-gray-400 text-xs">Tidak ada foto</span>
+                            @endif
+                        </td>
+
+                        <td class="py-6">
+                            {{ number_format($item->brightness ?? 0, 2) }}
+                        </td>
+
+                        <td class="py-6">
+                            {{ number_format($item->lab_l ?? 0, 2) }}
                         </td>
 
                         <td class="py-6">
@@ -232,7 +254,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center py-10 text-gray-400">
+                        <td colspan="8" class="text-center py-10 text-gray-400">
                             Belum ada hasil analisis
                         </td>
                     </tr>

@@ -41,7 +41,7 @@
                 <div class="relative w-[420px] max-w-full">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[#f37b7b] text-[13px]"></i>
 
-                    <form method="GET" action="{{ route('katalog') }}">
+                    <form method="GET" action="{{ route('search') }}">
                         <input type="text"
                                name="search"
                                value="{{ request('search') }}"

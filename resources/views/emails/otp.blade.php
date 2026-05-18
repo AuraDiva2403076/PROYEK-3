@@ -3,4 +3,4 @@
 
 <h1>{{ $otp }}</h1>
 
-<p>Kode ini berlaku selama 10 menit.</p>
+<p>Kode ini berlaku selama 5 menit.</p>

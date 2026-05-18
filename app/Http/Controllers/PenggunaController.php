@@ -10,9 +10,20 @@ use App\Exports\UsersExport;
 
 class PenggunaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->paginate(8);
+        $query = User::latest('created_at');
+
+        if ($request->start_date) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->end_date) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+
+        $users = $query->paginate(8)->withQueryString();
+
         return view('pengguna', compact('users'));
     }
 
@@ -20,15 +31,39 @@ class PenggunaController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $user->status = $user->status === 'Aktif' ? 'Nonaktif' : 'Aktif';
+        $user->status = $user->status === 'Aktif' ? 'Diblokir' : 'Aktif';
         $user->save();
 
         return back();
     }
 
-    // =======================
-    // LAPORAN & EXPORT
-    // =======================
+    public function updateProfile(Request $request)
+    {
+        $user = User::find($request->user_id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        $user->name = $request->name;
+        $user->no_telepon = $request->phone;
+        $user->alamat = $request->address;
+
+        if ($request->remove_image == '1') {
+            $user->foto = null;
+        } elseif ($request->filled('profile_image')) {
+            $user->foto = $request->profile_image;
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile updated',
+            'user' => $user
+        ], 200);
+    }
 
     public function laporanPengguna(Request $request)
     {
