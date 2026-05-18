@@ -9,12 +9,14 @@ use Illuminate\Http\Request;
 class RekomendasiController extends Controller
 {
     public function index()
-{
-    $rekomendasis = Rekomendasi::latest()->paginate(5);
-    $analisis = collect(); // kosong
+    {
+        $rekomendasis = Rekomendasi::latest()->paginate(5);
+        $analisis = Analisis::with('user')
+            ->latest()
+            ->paginate(10, ['*'], 'analisis_page');
 
-    return view('ai.dataset', compact('rekomendasis','analisis'));
-}
+        return view('ai.dataset', compact('rekomendasis', 'analisis'));
+    }
 
     public function store(Request $request)
     {
@@ -29,39 +31,50 @@ class RekomendasiController extends Controller
 
         return redirect()->back();
     }
+
     public function predict(Request $request)
-{
-    $request->validate([
-        'jenis' => 'required',
-        'undertone' => 'required',
-    ]);
+    {
+        $request->validate([
+            'jenis' => 'required',
+            'undertone' => 'required',
+        ]);
 
-    $hasil = Rekomendasi::where('warna_kulit', $request->jenis)
-                ->where('undertone', $request->undertone)
-                ->first();
+        $hasil = Rekomendasi::where('warna_kulit', $request->jenis)
+            ->where('undertone', $request->undertone)
+            ->first();
 
-    $rekomendasis = Rekomendasi::latest()->paginate(5);
+        $rekomendasis = Rekomendasi::latest()->paginate(5);
+        $analisis = Analisis::latest()->get();
 
-    return view('ai.dataset', compact('rekomendasis', 'hasil'));
-}
-public function edit($id)
-{
-    $data = Rekomendasi::findOrFail($id);
-    return view('ai.edit', compact('data'));
-}
+        return view('ai.dataset', compact('rekomendasis', 'hasil', 'analisis'));
+    }
 
-public function update(Request $request, $id)
-{
-    $data = Rekomendasi::findOrFail($id);
+    public function edit($id)
+    {
+        $data = Rekomendasi::findOrFail($id);
+        return view('ai.edit', compact('data'));
+    }
 
-    $data->update([
-        'warna_kulit' => $request->warna_kulit,
-        'undertone' => $request->undertone,
-        'rekomendasi_warna' => $request->rekomendasi_warna,
-    ]);
+    public function update(Request $request, $id)
+    {
+        $data = Rekomendasi::findOrFail($id);
 
-    return redirect()->route('dataset-ai.index')
-            ->with('success','Data berhasil diupdate');
-}
+        $data->update([
+            'warna_kulit' => $request->warna_kulit,
+            'undertone' => $request->undertone,
+            'rekomendasi_warna' => $request->rekomendasi_warna,
+        ]);
+
+        return redirect()->route('dataset-ai.index')
+                ->with('success','Data berhasil diupdate');
+    }
+
+    public function destroyAnalisis($id)
+    {
+        Analisis::findOrFail($id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Data analisis berhasil dihapus');
+    }
 
 }
