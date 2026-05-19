@@ -18,7 +18,7 @@
     </style>
 </head>
 
-<body class="flex">
+<body class="flex" x-data="{ openDropdown: false, openModal: false }">
 
     {{-- SIDEBAR --}}
     <x-sidebar />
@@ -70,23 +70,61 @@
                     <i class="fa-regular fa-bell"></i>
                 </div>
 
-                {{-- PROFILE --}}
-                <div class="flex items-center gap-3 bg-white px-4 h-[50px]
-                            rounded-2xl shadow-md min-w-[150px]">
+                {{-- PROFILE WRAPPER --}}
+                <div class="relative">
+                    
+                    <div @click="openDropdown = !openDropdown" 
+                         @click.away="openDropdown = false" 
+                         class="flex items-center gap-3 bg-white px-4 h-[50px] rounded-2xl shadow-md min-w-[150px] cursor-pointer hover:bg-gray-50 transition-all select-none">
 
-                    <div class="w-[26px] h-[26px] rounded-full bg-[#f37b7b]
-                                text-white flex items-center justify-center
-                                text-[13px] font-semibold">
-                        Y
+                        <div class="w-[26px] h-[26px] rounded-full bg-[#f37b7b] text-white flex items-center justify-center text-[13px] font-semibold overflow-hidden">
+                            @if(auth()->guard('admin')->check() && auth()->guard('admin')->user()->avatar)
+                                <img src="{{ asset('storage/' . auth()->guard('admin')->user()->avatar) }}" class="w-full h-full object-cover">
+                            @else
+                                {{ auth()->guard('admin')->check() ? strtoupper(substr(auth()->guard('admin')->user()->name, 0, 1)) : 'Y' }}
+                            @endif
+                        </div>
+
+                        <div class="leading-tight">
+                            <div class="font-semibold text-[12px] pb-1">
+                                {{ auth()->guard('admin')->check() ? auth()->guard('admin')->user()->name : 'Yolanda' }}
+                            </div>
+                            <div class="text-[10px] text-gray-400">Admin</div>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-down ml-auto text-[#f37b7b] text-[14px] transform transition-transform duration-200"
+                           :class="openDropdown ? 'rotate-180' : ''"></i>
                     </div>
 
-                    <div class="leading-tight">
-                        <div class="font-semibold text-[12px] pb-1">Yolanda</div>
-                        <div class="text-[10px] text-gray-400">Admin</div>
+                    <div x-show="openDropdown"
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-50 border border-gray-100"
+                         style="display: none;">
+                        
+                        <button @click="openModal = true; openDropdown = false" 
+                                class="w-full text-left px-4 py-2 text-[12px] font-medium text-gray-700 hover:bg-[#FDF7F7] hover:text-[#f37b7b] flex items-center gap-2 transition-colors">
+                            <i class="fa-solid fa-user-gear text-[13px]"></i>
+                            Settings Profile
+                        </button>
+
+                        <hr class="border-gray-100 my-1">
+
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" 
+                                    class="w-full text-left px-4 py-2 text-[12px] font-medium text-red-500 hover:bg-red-50 flex items-center gap-2 transition-colors">
+                                <i class="fa-solid fa-right-from-bracket text-[13px]"></i>
+                                Logout
+                            </button>
+                        </form>
                     </div>
 
-                    <i class="fa-solid fa-chevron-down ml-auto text-[#f37b7b] text-[14px]"></i>
-                </div>
+                </div>{{-- END PROFILE WRAPPER --}}
 
             </div>
         </div>
@@ -95,6 +133,110 @@
         @yield('content')
 
     </main>
+
+    {{-- MODAL POP-UP SETTING PROFILE ADMIN --}}
+    <div x-show="openModal" 
+         class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center" 
+         style="display: none;">
+        
+        <div class="fixed inset-0 bg-black/30 backdrop-blur-sm" @click="openModal = false"></div>
+
+        <div class="bg-white rounded-2xl w-full max-w-md mx-4 p-6 shadow-2xl z-10 border border-gray-100">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-[16px] font-semibold text-[#f37b7b]">Update Profil Admin</h3>
+                <button @click="openModal = false" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fa-solid fa-xmark text-[18px]"></i>
+                </button>
+            </div>
+
+            <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                @csrf
+                @method('PUT')
+
+                <div class="flex items-center gap-4 p-3 bg-[#FDF7F7] rounded-xl border border-[#f48a8a]/20">
+                    <div class="w-[50px] h-[50px] rounded-full bg-[#f37b7b] text-white flex items-center justify-center font-semibold overflow-hidden border border-gray-200 flex-shrink-0">
+                        @if(auth()->guard('admin')->check() && auth()->guard('admin')->user()->avatar)
+                            <img src="{{ asset('storage/' . auth()->guard('admin')->user()->avatar) }}" id="preview-avatar" class="w-full h-full object-cover">
+                        @else
+                            <div class="text-[16px]" id="placeholder-avatar">
+                                {{ auth()->guard('admin')->check() ? strtoupper(substr(auth()->guard('admin')->user()->name, 0, 1)) : 'Y' }}
+                            </div>
+                        @endif
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 mb-1">FOTO PROFIL</label>
+                        <input type="file" name="avatar" accept="image/*" onchange="previewImage(event)" 
+                               class="text-[11px] text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[11px] file:font-semibold file:bg-[#f37b7b]/10 file:text-[#f37b7b] hover:file:bg-[#f37b7b]/20 cursor-pointer">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-600 mb-1">Nama Lengkap</label>
+                    <input type="text" name="name" 
+                           value="{{ old('name', auth()->guard('admin')->check() ? auth()->guard('admin')->user()->name : 'Yolanda') }}" 
+                           required 
+                           class="w-full h-[38px] px-3 text-[12px] bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#f37b7b] transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-600 mb-1">Email</label>
+                    <input type="email" name="email" 
+                           value="{{ old('email', auth()->guard('admin')->check() ? auth()->guard('admin')->user()->email : 'admin@hara.com') }}" 
+                           required 
+                           class="w-full h-[38px] px-3 text-[12px] bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#f37b7b] transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-600 mb-1">No. Telepon / WhatsApp</label>
+                    <input type="text" name="phone" 
+                           value="{{ old('phone', auth()->guard('admin')->check() ? auth()->guard('admin')->user()->phone : '') }}" 
+                           placeholder="Contoh: 08123456789"
+                           class="w-full h-[38px] px-3 text-[12px] bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#f37b7b] transition-all">
+                </div>
+
+                <div class="flex justify-end gap-2 pt-3 border-t border-gray-100">
+                    <button type="button" @click="openModal = false" 
+                            class="h-[35px] px-4 bg-gray-100 text-gray-700 text-[12px] font-medium rounded-xl hover:bg-gray-200 transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" 
+                            class="h-[35px] px-4 bg-[#f37b7b] text-white text-[12px] font-medium rounded-xl hover:bg-[#e26a6a] shadow-md shadow-[#f37b7b]/10 transition-colors">
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- ALERT POP-UP BANNER JIKA SUKSES UPDATE --}}
+    @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" 
+             class="fixed bottom-5 right-5 z-50 bg-emerald-500 text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 transition-all text-[12px] font-medium">
+            <i class="fa-solid fa-circle-check text-[15px]"></i>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+
     <script src="//unpkg.com/alpinejs" defer></script>
+    
+    <script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            let output = document.getElementById('preview-avatar');
+            if(!output) {
+                const placeholder = document.getElementById('placeholder-avatar');
+                if(placeholder) {
+                    output = document.createElement('img');
+                    output.id = 'preview-avatar';
+                    output.className = 'w-full h-full object-cover';
+                    placeholder.parentNode.replaceChild(output, placeholder);
+                }
+            }
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+    </script>
 </body>
 </html>
