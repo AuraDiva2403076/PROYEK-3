@@ -126,17 +126,27 @@
                         {{ $item->metode ?? '-' }}
                     </td>
 
-                    {{-- AKSI --}}
-                    <td class="p-3">
-                        <div class="flex gap-2">
-                            <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200">
-                                <i class='bx bx-pencil'></i>
-                            </button>
-                            <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200">
-                                <i class='bx bx-trash'></i>
-                            </button>
-                        </div>
-                    </td>
+                   {{-- AKSI --}}
+<td class="p-3">
+    <div class="flex gap-2">
+        <a href="{{ route('penjualan.edit', $item->id) }}"
+           class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200">
+            <i class='bx bx-pencil'></i>
+        </a>
+
+        <form action="{{ route('penjualan.destroy', $item->id) }}"
+              method="POST"
+              onsubmit="return confirm('Yakin ingin menghapus data penjualan ini?')">
+            @csrf
+            @method('DELETE')
+
+            <button type="submit"
+                class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200">
+                <i class='bx bx-trash'></i>
+            </button>
+        </form>
+    </div>
+</td>
                 </tr>
                 @endforeach
             </tbody>

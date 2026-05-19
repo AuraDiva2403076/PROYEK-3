@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Penjualan;
 use App\Models\Produk;
+use App\Models\User;
+use App\Services\FirebaseNotificationService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PenjualanExport;
@@ -32,7 +34,7 @@ class PenjualanController extends Controller
                     ->paginate(10)
                     ->appends($request->query());
 
-        $produk = Produk::all(); // ambil semua produk untuk dropdown filter
+        $produk = Produk::all();
 
         return view('laporan.penjualan', compact('data', 'produk'));
     }
@@ -41,10 +43,9 @@ class PenjualanController extends Controller
     {
         $query = Penjualan::with('produk')->filter($request);
 
-        // kalau ada checkbox dipilih
         $ids = $request->ids ? json_decode($request->ids) : [];
 
-        if(!empty($ids)){
+        if (!empty($ids)) {
             $query->whereIn('id', $ids);
         }
 
@@ -70,4 +71,50 @@ class PenjualanController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        $penjualan = Penjualan::findOrFail($id);
+
+        return view('penjualan_edit', compact('penjualan'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required',
+        ]);
+
+        $penjualan = Penjualan::findOrFail($id);
+
+        $penjualan->update([
+            'status' => $request->status,
+        ]);
+
+        // KIRIM NOTIF KE USER
+        if ($penjualan->user_id) {
+            $user = User::find($penjualan->user_id);
+
+            if ($user && $user->fcm_token) {
+                $firebase = app(FirebaseNotificationService::class);
+
+                $firebase->sendNotification(
+                    $user->fcm_token,
+                    'Status Pesanan Diperbarui 📦',
+                    'Pesanan kamu sekarang berstatus: ' . $penjualan->status
+                );
+            }
+        }
+
+        return redirect()->route('penjualan.index')
+            ->with('success', 'Status penjualan berhasil diperbarui');
+    }
+
+    public function destroy($id)
+    {
+        $penjualan = Penjualan::findOrFail($id);
+        $penjualan->delete();
+
+        return redirect()->route('penjualan.index')
+            ->with('success', 'Data penjualan berhasil dihapus');
+    }
 }

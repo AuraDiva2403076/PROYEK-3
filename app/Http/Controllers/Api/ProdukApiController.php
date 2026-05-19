@@ -7,12 +7,14 @@ use App\Models\Produk;
 
 class ProdukApiController extends Controller
 {
-  public function index()
+    public function index()
     {
+        $baseUrl = request()->getSchemeAndHttpHost();
+
         $produks = Produk::with(['gambars', 'ukurans'])
             ->latest()
             ->get()
-            ->map(function ($item) {
+            ->map(function ($item) use ($baseUrl) {
                 $ukuranTerpilih = $item->ukurans
                     ->filter(fn($u) => $u->harga !== null && $u->harga > 0);
 
@@ -35,11 +37,11 @@ class ProdukApiController extends Controller
                     'price' => (int) ($ukuranTerpilih->min('harga') ?? 0),
 
                     'gambars' => $item->gambars->map(fn($g) =>
-                        asset('storage/' . $g->gambar)
+                        $baseUrl . '/storage/' . $g->gambar
                     )->values(),
 
                     'image' => $gambarPertama
-                        ? asset('storage/' . $gambarPertama->gambar)
+                        ? $baseUrl . '/storage/' . $gambarPertama->gambar
                         : null,
                 ];
             });

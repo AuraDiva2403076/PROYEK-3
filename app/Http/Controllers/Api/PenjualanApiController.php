@@ -22,6 +22,7 @@ class PenjualanApiController extends Controller
 
         $penjualan = Penjualan::create([
             'kode_pesanan' => 'ORD-' . time(),
+            'user_id' => $request->user_id ?? $request->id_pelanggan,
             'id_produk' => $request->id_produk,
             'id_pelanggan' => $request->id_pelanggan,
             'jumlah' => $request->jumlah,

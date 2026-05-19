@@ -8,6 +8,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\Api\AnalisisApiController;
 use App\Http\Controllers\Api\DiscountApiController;
 use App\Http\Controllers\RekomendasiController;
+use App\Http\Controllers\Api\NotificationController;
 
 Route::get('/produk', [ProdukApiController::class, 'index']);
 
@@ -34,3 +35,7 @@ Route::delete('/analisis/{id}', [RekomendasiController::class, 'destroyAnalisis'
     ->name('analisis.destroy');
 
 Route::get('/discounts', [DiscountApiController::class, 'index']);
+
+Route::post('/save-fcm-token', [NotificationController::class, 'saveToken']);
+
+Route::post('/test-notification', [NotificationController::class, 'testNotification']);

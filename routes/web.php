@@ -11,6 +11,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\DiscountController;
 
 
+
 Route::get('/', [DashboardController::class, 'index'])
     ->name('dashboard');
 
@@ -31,7 +32,19 @@ Route::get('/pengaturan', function () {
     return view('pengaturan');
 })->name('pengaturan');
 
-Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan');
+Route::get('/penjualan', [PenjualanController::class, 'index'])
+    ->name('penjualan.index');
+
+Route::get('/penjualan/{id}/edit', [PenjualanController::class, 'edit'])
+    ->name('penjualan.edit');
+
+Route::put('/penjualan/{id}', [PenjualanController::class, 'update'])
+    ->name('penjualan.update');
+
+Route::delete('/penjualan/{id}', [PenjualanController::class, 'destroy'])
+    ->name('penjualan.destroy');
+
+    
 Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna');
 Route::post('/pengguna/{id}/status', [PenggunaController::class, 'updateStatus'])
     ->name('pengguna.updateStatus');
@@ -86,3 +99,6 @@ Route::resource('discount', DiscountController::class);
 Route::patch('/discount/{id}/toggle',
     [DiscountController::class, 'toggle'])
     ->name('discount.toggle');
+
+    
+

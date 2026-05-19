@@ -28,7 +28,7 @@
                     Total Penjualan
                 </p>
 
-                <a href="{{ route('penjualan') }}"
+                <a href="{{ route('penjualan.index') }}"
                    class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">
                     Lainnya →
                 </a>
@@ -68,7 +68,7 @@
                     Total Pendapatan
                 </p>
 
-                <a href="{{ route('penjualan') }}"
+                <a href="{{ route('penjualan.index') }}"
                    class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">
                     Lainnya →
                 </a>
@@ -178,15 +178,8 @@
 
         {{-- PRODUK TERLARIS --}}
         <div class="bg-white p-6 rounded-3xl card-shadow">
-<<<<<<< HEAD
-            <h3 class="font-bold mb-6 text-gray-800">Produk Terlaris</h3>
-            <div class="space-y-4">
-                @foreach([90, 70, 50, 20] as $width)
-                <div class="w-full bg-gray-50 h-3 rounded-full overflow-hidden">
-                <div class="bg-pink-400 h-full w-[{{ $width }}%]"></div>
-                </div>
-                @endforeach
-=======
+
+          
 
             <h3 class="font-bold mb-6 text-gray-800">
                 Produk Terlaris
@@ -230,7 +223,6 @@
 
                 @endforelse
 
->>>>>>> 4eba1336fcaa9df3b4c3a8aa3a2c20bfc2b39203
             </div>
 
         </div>

@@ -8,6 +8,7 @@ class Penjualan extends Model
 {
 
     protected $fillable = [
+        'user_id',
         'kode_pesanan',
         'id_produk',
         'id_pelanggan',

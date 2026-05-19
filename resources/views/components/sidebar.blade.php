@@ -10,7 +10,7 @@
                 $menus = [
                     ['name' => 'Beranda', 'icon' => 'layout-dashboard', 'route' => 'dashboard'],
                     ['name' => 'Katalog Produk', 'icon' => 'shopping-bag', 'route' => 'katalog'],
-                    ['name' => 'Penjualan', 'icon' => 'tag', 'route' => 'penjualan'],
+                    ['name' => 'Penjualan', 'icon' => 'tag', 'route' => 'penjualan.index'],
                     ['name' => 'Discount', 'icon' => 'percent', 'route' => 'discount.index'],
                     ['name' => 'AI Features', 'icon' => 'sparkles', 'route' => 'dataset-ai.index', 'italic' => true],
                     ['name' => 'Pengguna', 'icon' => 'users', 'route' => 'pengguna'],
