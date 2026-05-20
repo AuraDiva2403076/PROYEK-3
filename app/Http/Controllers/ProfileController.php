@@ -16,31 +16,28 @@ class ProfileController extends Controller
     {
         return view('login'); // Akan mencari file bernama login.blade.php
     }
-
-    /**
-     * Proses Login Admin menggunakan Guard Admin
-     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-
-        // Eksekusi autentikasi menggunakan guard 'admin'
-        if (Auth::guard('admin')->attempt($credentials, $request->remember)) {
+    
+        // Menggunakan Auth default (mencari ke tabel users)
+        if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
             
-            // Arahkan langsung ke halaman discount setelah berhasil login
             return redirect()->intended('/discount'); 
         }
-
-        // Jika gagal, kembalikan dengan pesan error
+    
         return back()->withErrors([
             'email' => 'Email atau password yang Anda masukkan salah.',
         ])->onlyInput('email');
     }
-
+    /**
+     * Proses Login Admin menggunakan Guard Admin
+     */
+  
     /**
      * Update Data Profil Admin
      */

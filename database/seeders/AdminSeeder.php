@@ -14,7 +14,7 @@ class AdminSeeder extends Seeder
             'name' => 'Yolanda',
             'email' => 'admin@hara.com',
             'phone' => '081234567890',
-            'password' => Hash::make('password123'), // Ganti sesuai kebutuhan Anda nanti
+            'password' => Hash::make('admin123'), // Ganti sesuai kebutuhan Anda nanti
         ]);
     }
 }

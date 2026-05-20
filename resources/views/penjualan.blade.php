@@ -1,130 +1,283 @@
-    @extends('layouts.app')
+@extends('layouts.app')
 
-    @section('title', 'Penjualan')
+@section('title', 'Penjualan')
 
-    @section('content')
-    <div class="space-y-6">
+@section('content')
+<div class="space-y-6 text-gray-800 dark:text-white">
+
+    {{-- HEADER --}}
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
+                Data Penjualan
+            </h1>
+
+            <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">
+                Kelola seluruh transaksi penjualan Hara Hijab Needs
+            </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <a href="{{ route('laporan.penjualan') }}"
+               class="px-5 py-2.5 rounded-2xl border text-white
+                      shadow-lg text-sm font-semibold transition-all duration-300"
+               style="background-color: #F38B93; border-color: rgba(243, 139, 147, 0.35);"
+               onmouseover="this.style.backgroundColor='#ea7d86'"
+               onmouseout="this.style.backgroundColor='#F38B93'">
+                Export Laporan
+            </a>
+        </div>
+    </div>
 
     {{-- KARTU STATISTIK --}}
-    <div class="grid grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
-        {{-- Total Pesanan --}}
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-pink-200 flex items-center gap-4">
-            <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-pink-50">
-                <i class="bx bx-cart text-2xl text-gray-500"></i>
-            </div>
-            <div>
-                <p class="text-sm text-gray-400">Total Pesanan</p>
-                <h2 class="text-2xl font-semibold text-gray-800">{{ $totalPesanan }}</h2>
+        {{-- TOTAL PESANAN --}}
+        <div class="bg-white dark:bg-[#1E293B] rounded-3xl p-6 border shadow-sm hover:shadow-lg transition-all duration-300"
+             style="border-color: rgba(243, 139, 147, 0.20);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 dark:text-slate-400 mb-2">Total Pesanan</p>
+                    <h2 class="text-3xl font-bold text-gray-800 dark:text-white">{{ $totalPesanan }}</h2>
+                </div>
+
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                     style="background-color: rgba(243, 139, 147, 0.15);">
+                    <i class="bx bx-cart-alt text-3xl" style="color: #F38B93;"></i>
+                </div>
             </div>
         </div>
 
-        {{-- Selesai --}}
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-pink-200 flex items-center gap-4">
-            <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-green-50">
-                <i class="bx bx-check-square text-2xl text-green-500"></i>
-            </div>
-            <div>
-                <p class="text-sm text-gray-400">Selesai</p>
-                <h2 class="text-2xl font-semibold text-gray-800">{{ $selesai }}</h2>
+        {{-- SELESAI --}}
+        <div class="bg-white dark:bg-[#1E293B] rounded-3xl p-6 border shadow-sm hover:shadow-lg transition-all duration-300"
+             style="border-color: rgba(243, 139, 147, 0.20);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 dark:text-slate-400 mb-2">Pesanan Selesai</p>
+                    <h2 class="text-3xl font-bold text-gray-800 dark:text-white">{{ $selesai }}</h2>
+                </div>
+
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                     style="background-color: rgba(243, 139, 147, 0.15);">
+                    <i class="bx bx-check-circle text-3xl" style="color: #F38B93;"></i>
+                </div>
             </div>
         </div>
 
-        {{-- Batal --}}
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-pink-200 flex items-center gap-4">
-            <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-red-50">
-                <i class="bx bx-x-circle text-2xl text-red-500"></i>
-            </div>
-            <div>
-                <p class="text-sm text-gray-400">Batal</p>
-                <h2 class="text-2xl font-semibold text-gray-800">{{ $batal }}</h2>
+        {{-- BATAL --}}
+        <div class="bg-white dark:bg-[#1E293B] rounded-3xl p-6 border shadow-sm hover:shadow-lg transition-all duration-300"
+             style="border-color: rgba(243, 139, 147, 0.20);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 dark:text-slate-400 mb-2">Pesanan Batal</p>
+                    <h2 class="text-3xl font-bold text-gray-800 dark:text-white">{{ $batal }}</h2>
+                </div>
+
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                     style="background-color: rgba(243, 139, 147, 0.15);">
+                    <i class="bx bx-x-circle text-3xl" style="color: #F38B93;"></i>
+                </div>
             </div>
         </div>
 
-        {{-- Dalam Proses --}}
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-pink-200 flex items-center gap-4">
-            <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-yellow-50">
-                <i class="bx bx-time text-2xl text-yellow-500"></i>
-            </div>
-            <div>
-                <p class="text-sm text-gray-400">Dalam Proses</p>
-                <h2 class="text-2xl font-semibold text-gray-800">{{ $proses }}</h2>
+        {{-- PROSES --}}
+        <div class="bg-white dark:bg-[#1E293B] rounded-3xl p-6 border shadow-sm hover:shadow-lg transition-all duration-300"
+             style="border-color: rgba(243, 139, 147, 0.20);">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 dark:text-slate-400 mb-2">Dalam Proses</p>
+                    <h2 class="text-3xl font-bold text-gray-800 dark:text-white">{{ $proses }}</h2>
+                </div>
+
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                     style="background-color: rgba(243, 139, 147, 0.15);">
+                    <i class="bx bx-loader-circle text-3xl" style="color: #F38B93;"></i>
+                </div>
             </div>
         </div>
 
     </div>
 
     {{-- FILTER --}}
-    <div class="flex justify-between items-center mt-6">
+    <div class="bg-white dark:bg-[#1E293B] rounded-3xl p-5 border shadow-sm"
+         style="border-color: rgba(243, 139, 147, 0.20);">
 
-        <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200">
+        <form method="GET"
+              action="{{ route('penjualan') }}"
+              class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
 
-            <span class="text-sm text-gray-400">Tanggal Mulai:</span>
-            <input type="date" name="start_date"
-                class="bg-gray-50 text-sm px-3 py-1 rounded-lg border border-gray-200 focus:outline-none">
+            <div class="flex flex-wrap items-center gap-3">
 
-            <span class="text-sm text-gray-400">Tanggal Akhir:</span>
-            <input type="date" name="end_date"
-                class="bg-gray-50 text-sm px-3 py-1 rounded-lg border border-gray-200 focus:outline-none">
+                <div>
+                    <label class="text-xs text-gray-500 dark:text-slate-400 block mb-1">
+                        Tanggal Mulai
+                    </label>
 
-            <button class="w-9 h-9 flex items-center justify-center rounded-full bg-pink-100 text-pink-500">
-                <i class="bx bx-search"></i>
-            </button>
-        </div>
+                    <input type="date"
+                           name="start_date"
+                           value="{{ request('start_date') }}"
+                           class="px-4 py-2.5 rounded-2xl border
+                                  bg-white dark:bg-[#0F172A]
+                                  text-gray-700 dark:text-white
+                                  focus:outline-none focus:border-[#F38B93]
+                                  focus:ring-2 focus:ring-[#F38B93]/20
+                                  text-sm"
+                           style="border-color: rgba(243, 139, 147, 0.30);">
+                </div>
 
-        <button class="bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200 text-sm text-gray-500 flex items-center gap-2">
-            Filter
-            <i class="bx bx-chevron-down"></i>
-        </button>
+                <div>
+                    <label class="text-xs text-gray-500 dark:text-slate-400 block mb-1">
+                        Tanggal Akhir
+                    </label>
+
+                    <input type="date"
+                           name="end_date"
+                           value="{{ request('end_date') }}"
+                           class="px-4 py-2.5 rounded-2xl border
+                                  bg-white dark:bg-[#0F172A]
+                                  text-gray-700 dark:text-white
+                                  focus:outline-none focus:border-[#F38B93]
+                                  focus:ring-2 focus:ring-[#F38B93]/20
+                                  text-sm"
+                           style="border-color: rgba(243, 139, 147, 0.30);">
+                </div>
+
+                <div>
+                    <label class="text-xs text-gray-500 dark:text-slate-400 block mb-1">
+                        Status
+                    </label>
+
+                    <select name="status"
+                            class="px-4 py-2.5 rounded-2xl border
+                                   bg-white dark:bg-[#0F172A]
+                                   text-gray-700 dark:text-white
+                                   focus:outline-none focus:border-[#F38B93]
+                                   focus:ring-2 focus:ring-[#F38B93]/20
+                                   text-sm"
+                            style="border-color: rgba(243, 139, 147, 0.30);">
+
+                        <option value="">Semua Status</option>
+
+                        <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>
+                            Selesai
+                        </option>
+
+                        <option value="Batal" {{ request('status') == 'Batal' ? 'selected' : '' }}>
+                            Batal
+                        </option>
+
+                        <option value="Dalam Proses" {{ request('status') == 'Dalam Proses' ? 'selected' : '' }}>
+                            Dalam Proses
+                        </option>
+
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="flex items-center gap-3">
+
+                <button type="submit"
+                        class="text-white px-5 py-2.5 rounded-2xl
+                               text-sm font-semibold shadow-lg transition-all duration-300"
+                        style="background-color: #F38B93;"
+                        onmouseover="this.style.backgroundColor='#ea7d86'"
+                        onmouseout="this.style.backgroundColor='#F38B93'">
+                    Terapkan Filter
+                </button>
+
+                <a href="{{ route('penjualan') }}"
+                   class="px-5 py-2.5 rounded-2xl
+                          text-sm font-semibold transition-all duration-300
+                          hover:bg-[#F38B93]/10"
+                   style="border: 1px solid rgba(243, 139, 147, 0.35); color: #F38B93;">
+                    Reset
+                </a>
+
+            </div>
+
+        </form>
 
     </div>
 
     {{-- TABEL --}}
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <table class="w-full text-sm">
-            <thead class="bg-gray-50 text-gray-600">
-                <tr>
-                    <th class="p-3"><input type="checkbox"></th>
-                    <th class="p-3 text-left">ID</th>
-                    <th class="p-3 text-left">Id Produk</th>
-                    <th class="p-3 text-left">Id Pelanggan</th>
-                    <th class="p-3 text-left">Jumlah</th>
-                    <th class="p-3 text-left">Harga</th>
-                    <th class="p-3 text-left">Total</th>
-                    <th class="p-3 text-left">Tanggal</th>
-                    <th class="p-3 text-left">Status</th>
-                    <th class="p-3 text-left">Metode</th>
-                    <th class="p-3 text-left">Aksi</th>
-                </tr>
-            </thead>
+    <div class="bg-white dark:bg-[#1E293B] rounded-3xl border shadow-sm overflow-hidden"
+         style="border-color: rgba(243, 139, 147, 0.20);">
 
-            <tbody class="divide-y">
-                @foreach($data as $item)
-                <tr class="hover:bg-gray-50">
-                    <td class="p-3"><input type="checkbox"></td>
-                    <td class="p-3 font-medium text-gray-700">{{ $item->kode_pesanan }}</td>
-                    <td class="p-3">{{ $item->id_produk }}</td>
-                    <td class="p-3">{{ $item->id_pelanggan }}</td>
-                    <td class="p-3">{{ $item->jumlah }}</td>
-                    <td class="p-3">Rp{{ number_format($item->harga) }}</td>
-                    <td class="p-3">Rp{{ number_format($item->total) }}</td>
-                    <td class="p-3">{{ $item->tanggal }}</td>
+        <div class="overflow-x-auto">
 
-                    {{-- STATUS BADGE --}}
-                    <td class="p-3">
-                        @if($item->status == 'Selesai')
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-600">Selesai</span>
-                        @elseif($item->status == 'Batal')
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-600">Batal</span>
-                        @else
-                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-600">Dalam Proses</span>
-                        @endif
-                    </td>
+            <table class="w-full text-sm">
 
-                    {{-- METODE --}}
-                    <td class="p-3 text-gray-700">
-                        {{ $item->metode ?? '-' }}
-                    </td>
+                <thead class="text-white" style="background-color: #F38B93;">
+                    <tr>
+                        <th class="p-4 text-left font-semibold">ID Pesanan</th>
+                        <th class="p-4 text-left font-semibold">ID Produk</th>
+                        <th class="p-4 text-left font-semibold">ID Pelanggan</th>
+                        <th class="p-4 text-left font-semibold">Jumlah</th>
+                        <th class="p-4 text-left font-semibold">Harga</th>
+                        <th class="p-4 text-left font-semibold">Total</th>
+                        <th class="p-4 text-left font-semibold">Tanggal</th>
+                        <th class="p-4 text-left font-semibold">Status</th>
+                        <th class="p-4 text-left font-semibold">Metode</th>
+                        <th class="p-4 text-center font-semibold">Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody class="bg-white dark:bg-[#1E293B] divide-y divide-[#F38B93]/10">
+
+                    @forelse($data as $item)
+
+                    <tr class="transition-all duration-300 hover:bg-[#F38B93]/10 dark:hover:bg-[#263247]">
+
+                        <td class="p-4 font-semibold text-gray-800 dark:text-white">
+                            {{ $item->kode_pesanan }}
+                        </td>
+
+                        <td class="p-4 text-gray-600 dark:text-slate-300">
+                            {{ $item->id_produk }}
+                        </td>
+
+                        <td class="p-4 text-gray-600 dark:text-slate-300">
+                            {{ $item->id_pelanggan }}
+                        </td>
+
+                        <td class="p-4 text-gray-600 dark:text-slate-300">
+                            {{ $item->jumlah }}
+                        </td>
+
+                        <td class="p-4 font-medium text-gray-700 dark:text-slate-200">
+                            Rp{{ number_format($item->harga, 0, ',', '.') }}
+                        </td>
+
+                        <td class="p-4 font-bold" style="color: #F38B93;">
+                            Rp{{ number_format($item->total, 0, ',', '.') }}
+                        </td>
+
+                        <td class="p-4 text-gray-500 dark:text-slate-400">
+                            {{ $item->tanggal }}
+                        </td>
+
+                        <td class="p-4">
+                            @if($item->status == 'Selesai')
+                                <span class="px-4 py-1.5 rounded-full border text-xs font-semibold"
+                                      style="background-color: rgba(243, 139, 147, 0.15); color: #F38B93; border-color: rgba(243, 139, 147, 0.20);">
+                                    Selesai
+                                </span>
+                            @elseif($item->status == 'Batal')
+                                <span class="px-4 py-1.5 rounded-full bg-red-100 dark:bg-red-500/15 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-400/20 text-xs font-semibold">
+                                    Batal
+                                </span>
+                            @else
+                                <span class="px-4 py-1.5 rounded-full border text-xs font-semibold"
+                                      style="background-color: rgba(243, 139, 147, 0.15); color: #F38B93; border-color: rgba(243, 139, 147, 0.20);">
+                                    Dalam Proses
+                                </span>
+                            @endif
+                        </td>
+
+                        <td class="p-4 text-gray-600 dark:text-slate-300">
+                            {{ $item->metode ?? '-' }}
+                        </td>
 
                    {{-- AKSI --}}
 <td class="p-3">
@@ -151,11 +304,50 @@
                 @endforeach
             </tbody>
         </table>
+                        <td class="p-4">
+                            <div class="flex items-center justify-center gap-2">
 
-        {{-- PAGINATION TENGAH --}}
-        <div class="p-4 flex justify-center">
+                                <button
+                                    class="w-9 h-9 rounded-xl transition-all duration-300 flex items-center justify-center hover:text-white"
+                                    style="background-color: rgba(243, 139, 147, 0.15); color: #F38B93;"
+                                    onmouseover="this.style.backgroundColor='#F38B93'; this.style.color='#ffffff';"
+                                    onmouseout="this.style.backgroundColor='rgba(243, 139, 147, 0.15)'; this.style.color='#F38B93';">
+                                    <i class="bx bx-pencil text-lg"></i>
+                                </button>
+
+                                <button
+                                    class="w-9 h-9 rounded-xl transition-all duration-300 flex items-center justify-center hover:text-white"
+                                    style="background-color: rgba(243, 139, 147, 0.15); color: #F38B93;"
+                                    onmouseover="this.style.backgroundColor='#F38B93'; this.style.color='#ffffff';"
+                                    onmouseout="this.style.backgroundColor='rgba(243, 139, 147, 0.15)'; this.style.color='#F38B93';">
+                                    <i class="bx bx-trash text-lg"></i>
+                                </button>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    @empty
+
+                    <tr>
+                        <td colspan="10" class="p-10 text-center text-gray-500 dark:text-slate-400">
+                            Belum ada data penjualan
+                        </td>
+                    </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="p-5 border-t border-[#F38B93]/10 bg-white dark:bg-[#1E293B]">
             {{ $data->links() }}
         </div>
+
     </div>
 
     </div>
@@ -173,3 +365,5 @@
     };
 </script>
     @endsection
+</div>
+@endsection

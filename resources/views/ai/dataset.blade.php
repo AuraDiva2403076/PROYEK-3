@@ -4,52 +4,54 @@
 
 @section('content')
 
-<div class="space-y-8">
+<div class="space-y-8 text-gray-800 dark:text-white">
 
-    {{-- ================= CARD DATASET REKOMENDASI ================= --}}
-    <div class="bg-white rounded-3xl shadow-md p-8">
+    @php
+        $colorMap = [
+            'ivory' => '#fffff0',
+            'taupe' => '#8b8589',
+            'dark choco' => '#3b241c',
+            'black' => '#000000',
+            'shadow' => '#4a4a4a',
+            'grey latte' => '#b8aea3',
+            'walnute' => '#6b4423',
+            'dark brown' => '#4a2c2a',
+            'pearl' => '#f8f6f0',
+            'charcoal' => '#36454f',
+            'smoke' => '#848884',
+            'biscuit' => '#ddb892',
+            'soft yellow' => '#fff59d',
+            'golden brown' => '#996515',
+            'grey seal' => '#8a8d8f',
+            'latte' => '#c8a27a',
+            'coral' => '#ff7f50',
+            'peach' => '#ffccbc',
+            'navy' => '#000080',
+            'sky blue' => '#87ceeb',
+            'dusty pink' => '#d8a7b1',
+        ];
+    @endphp
+
+    {{-- DATASET --}}
+    <div class="bg-white dark:bg-[#1E293B] rounded-3xl shadow-md p-8 border border-[#F38B93]/20 transition-all duration-300">
 
         <div class="flex items-center justify-between mb-6">
             <div>
-                <h2 class="text-xl font-semibold text-gray-700">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
                     Daftar Rekomendasi Hijab
                 </h2>
-                <p class="text-sm text-gray-400 mt-1">
+
+                <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">
                     Dataset warna hijab berdasarkan kategori warna kulit
                 </p>
             </div>
         </div>
 
-        @php
-            $colorMap = [
-                'ivory' => '#fffff0',
-                'taupe' => '#8b8589',
-                'dark choco' => '#3b241c',
-                'black' => '#000000',
-                'shadow' => '#4a4a4a',
-                'grey latte' => '#b8aea3',
-                'walnute' => '#6b4423',
-                'dark brown' => '#4a2c2a',
-                'pearl' => '#f8f6f0',
-                'charcoal' => '#36454f',
-                'smoke' => '#848884',
-                'biscuit' => '#ddb892',
-                'soft yellow' => '#fff59d',
-                'golden brown' => '#996515',
-                'grey seal' => '#8a8d8f',
-                'latte' => '#c8a27a',
-                'coral' => '#ff7f50',
-                'peach' => '#ffccbc',
-                'navy' => '#000080',
-                'sky blue' => '#87ceeb',
-                'dusty pink' => '#d8a7b1',
-            ];
-        @endphp
+        <div class="overflow-x-auto rounded-2xl border border-[#F38B93]/20">
 
-        <div class="overflow-x-auto rounded-2xl border border-gray-100">
             <table class="w-full text-sm">
 
-                <thead class="bg-pink-50 text-gray-500">
+                <thead class="text-white" style="background-color:#F38B93;">
                     <tr>
                         <th class="px-5 py-4 text-left font-semibold">ID</th>
                         <th class="px-5 py-4 text-left font-semibold">Warna Kulit</th>
@@ -59,70 +61,63 @@
                     </tr>
                 </thead>
 
-                <tbody class="divide-y divide-gray-100 text-gray-700">
+                <tbody class="divide-y divide-[#F38B93]/10 bg-white dark:bg-[#1E293B]">
 
                     @forelse($rekomendasis as $data)
 
                         @php
-                            $kesanAI = '';
-
-                            switch(strtolower($data->warna_kulit)) {
-                                case 'putih':
-                                    $kesanAI = 'Elegant, fresh, clean, classy';
-                                    break;
-                                case 'kuning langsat':
-                                    $kesanAI = 'Bright, glowing, cheerful';
-                                    break;
-                                case 'sawo matang':
-                                    $kesanAI = 'Warm, natural, exotic, glam';
-                                    break;
-                                case 'gelap':
-                                    $kesanAI = 'Bold, strong, powerful look';
-                                    break;
-                                default:
-                                    $kesanAI = 'Natural & balanced look';
-                            }
+                            $kesanAI = match(strtolower($data->warna_kulit)) {
+                                'putih' => 'Elegant, fresh, clean, classy',
+                                'kuning langsat' => 'Bright, glowing, cheerful',
+                                'sawo matang' => 'Warm, natural, exotic, glam',
+                                'gelap' => 'Bold, strong, powerful look',
+                                default => 'Natural & balanced look'
+                            };
                         @endphp
 
-                        <tr class="hover:bg-pink-50/40 transition">
+                        <tr class="hover:bg-[#F38B93]/10 transition">
 
-                            <td class="px-5 py-4 font-semibold text-gray-700 whitespace-nowrap">
+                            <td class="px-5 py-4 font-semibold text-gray-800 dark:text-white whitespace-nowrap">
                                 WK{{ str_pad($data->id,2,'0',STR_PAD_LEFT) }}
                             </td>
 
                             <td class="px-5 py-4 whitespace-nowrap">
-                                <span class="px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-medium">
+                                <span class="px-3 py-1 rounded-full bg-[#F38B93]/15 text-[#F38B93] border border-[#F38B93]/25 text-xs font-medium">
                                     {{ $data->warna_kulit }}
                                 </span>
                             </td>
 
                             <td class="px-5 py-4">
                                 <div class="flex flex-wrap gap-2 max-w-xl max-h-24 overflow-y-auto pr-2">
+
                                     @foreach(explode(',', $data->rekomendasi_warna) as $warna)
                                         @php
                                             $key = strtolower(trim($warna));
                                             $bg = $colorMap[$key] ?? '#cccccc';
 
                                             $darkTextColors = [
-                                                'ivory', 'pearl', 'soft yellow', 'peach',
-                                                'sky blue', 'dusty pink', 'biscuit', 'latte',
-                                                'grey latte'
+                                                'ivory','pearl','soft yellow','peach',
+                                                'sky blue','dusty pink','biscuit',
+                                                'latte','grey latte'
                                             ];
 
-                                            $textColor = in_array($key, $darkTextColors) ? 'text-gray-700' : 'text-white';
+                                            $textColor = in_array($key, $darkTextColors)
+                                                ? 'text-gray-700'
+                                                : 'text-white';
                                         @endphp
 
-                                        @if(trim($warna) !== '')
+                                        @if(trim($warna))
                                             <span class="inline-flex items-center px-3 py-1 text-xs rounded-full shadow-sm {{ $textColor }}"
                                                   style="background-color: {{ $bg }};">
                                                 {{ trim($warna) }}
                                             </span>
                                         @endif
                                     @endforeach
+
                                 </div>
                             </td>
 
-                            <td class="px-5 py-4 text-gray-500 min-w-[180px]">
+                            <td class="px-5 py-4 text-gray-500 dark:text-slate-400">
                                 {{ $kesanAI }}
                             </td>
 
@@ -130,7 +125,7 @@
                                 <div class="flex justify-center items-center gap-4 text-lg">
 
                                     <a href="{{ route('dataset-ai.edit',$data->id) }}"
-                                       class="text-blue-500 hover:text-blue-600 transition">
+                                       class="text-[#F38B93] hover:text-pink-600 dark:hover:text-white transition">
                                         ✏
                                     </a>
 
@@ -139,6 +134,7 @@
                                           onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                         @csrf
                                         @method('DELETE')
+
                                         <button type="submit"
                                                 class="text-red-500 hover:text-red-600 transition">
                                             🗑
@@ -151,16 +147,19 @@
                         </tr>
 
                     @empty
+
                         <tr>
-                            <td colspan="5" class="text-center py-10 text-gray-400">
+                            <td colspan="5" class="text-center py-10 text-gray-500 dark:text-slate-400">
                                 Belum ada dataset
                             </td>
                         </tr>
+
                     @endforelse
 
                 </tbody>
 
             </table>
+
         </div>
 
         <div class="mt-6">
@@ -169,127 +168,109 @@
 
     </div>
 
-
-    {{-- ================= CARD ANALISIS ================= --}}
-    <div class="bg-white rounded-3xl shadow-md p-8">
+    {{-- ANALISIS --}}
+    <div class="bg-white dark:bg-[#1E293B] rounded-3xl shadow-md p-8 border border-[#F38B93]/20 transition-all duration-300">
 
         <div class="mb-6">
-            <h2 class="text-xl font-semibold text-gray-700">
-                Hasil Analisis <span class="italic">Image Processing</span> Pengguna
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
+                Hasil Analisis Pengguna
             </h2>
-            <p class="text-sm text-gray-400 mt-1">
-                Riwayat hasil deteksi warna kulit dan rekomendasi hijab
+
+            <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">
+                Riwayat deteksi AI pengguna
             </p>
         </div>
 
-        <div class="overflow-x-auto rounded-2xl border border-gray-100">
+        <div class="overflow-x-auto rounded-2xl border border-[#F38B93]/20">
+
             <table class="w-full text-sm">
 
-                <thead class="bg-pink-50 text-gray-500">
+                <thead class="text-white" style="background-color:#F38B93;">
                     <tr>
-                        <th class="px-5 py-4 text-left font-semibold">Identitas</th>
-                        <th class="px-5 py-4 text-left font-semibold">Warna Kulit</th>
-                        <th class="px-5 py-4 text-left font-semibold">Rekomendasi Warna</th>
-                        <th class="px-5 py-4 text-left font-semibold">Foto</th>
-                        <th class="px-5 py-4 text-left font-semibold">Brightness</th>
-                        <th class="px-5 py-4 text-left font-semibold">LAB L</th>
-                        <th class="px-5 py-4 text-left font-semibold">Tanggal</th>
-                        <th class="px-5 py-4 text-center font-semibold">Aksi</th>
+                        <th class="px-5 py-4 text-left">Kode</th>
+                        <th class="px-5 py-4 text-left">Warna Kulit</th>
+                        <th class="px-5 py-4 text-left">Rekomendasi</th>
+                        <th class="px-5 py-4 text-left">Foto</th>
+                        <th class="px-5 py-4 text-left">Brightness</th>
+                        <th class="px-5 py-4 text-left">LAB L</th>
+                        <th class="px-5 py-4 text-left">Tanggal</th>
+                        <th class="px-5 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
 
-                <tbody class="divide-y divide-gray-100 text-gray-700">
+                <tbody class="divide-y divide-[#F38B93]/10 bg-white dark:bg-[#1E293B]">
 
                     @forelse($analisis ?? [] as $item)
-                        <tr class="hover:bg-pink-50/40 transition">
 
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <div class="font-semibold text-gray-700">
-                                    {{ $item->kode }}
-                                </div>
-                                <div class="text-xs text-gray-400 mt-1">
-                                    USR-{{ $item->user_id }}
-                                </div>
-                            </td>
+                    <tr class="hover:bg-[#F38B93]/10 transition">
 
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                <span class="px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-medium">
-                                    {{ $item->warna_kulit }}
+                        <td class="px-5 py-4 font-semibold text-gray-800 dark:text-white">
+                            {{ $item->kode }}
+                        </td>
+
+                        <td class="px-5 py-4">
+                            <span class="px-3 py-1 rounded-full bg-[#F38B93]/15 text-[#F38B93] border border-[#F38B93]/25 text-xs font-medium">
+                                {{ $item->warna_kulit }}
+                            </span>
+                        </td>
+
+                        <td class="px-5 py-4 text-gray-600 dark:text-slate-300">
+                            {{ $item->rekomendasi_warna }}
+                        </td>
+
+                        <td class="px-5 py-4">
+                            @if($item->foto)
+                                <img src="{{ asset('storage/'.$item->foto) }}"
+                                     class="w-10 h-10 rounded-full object-cover border border-[#F38B93]/25">
+                            @else
+                                <span class="text-gray-400 dark:text-slate-400 text-xs">
+                                    Tidak ada foto
                                 </span>
-                            </td>
+                            @endif
+                        </td>
 
-                            <td class="px-5 py-4">
-                                <div class="flex flex-wrap gap-2 max-w-xs max-h-24 overflow-y-auto pr-2">
-                                    @foreach(explode(',', $item->rekomendasi_warna ?? '') as $warna)
-                                        @php
-                                            $key = strtolower(trim($warna));
-                                            $bg = $colorMap[$key] ?? '#cccccc';
+                        <td class="px-5 py-4 text-gray-600 dark:text-slate-300">
+                            {{ number_format($item->brightness ?? 0, 2) }}
+                        </td>
 
-                                            $darkTextColors = [
-                                                'ivory', 'pearl', 'soft yellow', 'peach',
-                                                'sky blue', 'dusty pink', 'biscuit', 'latte',
-                                                'grey latte'
-                                            ];
+                        <td class="px-5 py-4 text-gray-600 dark:text-slate-300">
+                            {{ number_format($item->lab_l ?? 0, 2) }}
+                        </td>
 
-                                            $textColor = in_array($key, $darkTextColors) ? 'text-gray-700' : 'text-white';
-                                        @endphp
+                        <td class="px-5 py-4 text-gray-500 dark:text-slate-400">
+                            {{ $item->created_at->format('d M Y') }}
+                        </td>
 
-                                        @if(trim($warna) !== '')
-                                            <span class="inline-flex items-center px-3 py-1 text-xs rounded-full shadow-sm {{ $textColor }}"
-                                                  style="background-color: {{ $bg }};">
-                                                {{ trim($warna) }}
-                                            </span>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </td>
+                        <td class="px-5 py-4 text-center">
+                            <form action="{{ route('analisis.destroy',$item->id) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Yakin ingin menghapus hasil analisis ini?')">
+                                @csrf
+                                @method('DELETE')
 
-                            <td class="px-5 py-4">
-                                @if($item->foto)
-                                    <img src="{{ asset('storage/'.$item->foto) }}"
-                                         class="w-10 h-10 rounded-full object-cover border border-gray-200 shadow-sm">
-                                @else
-                                    <span class="text-gray-400 text-xs">Tidak ada foto</span>
-                                @endif
-                            </td>
+                                <button type="submit"
+                                        class="text-red-500 hover:text-red-600 transition">
+                                    🗑
+                                </button>
+                            </form>
+                        </td>
 
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                {{ number_format($item->brightness ?? 0, 2) }}
-                            </td>
+                    </tr>
 
-                            <td class="px-5 py-4 whitespace-nowrap">
-                                {{ number_format($item->lab_l ?? 0, 2) }}
-                            </td>
-
-                            <td class="px-5 py-4 whitespace-nowrap text-gray-500">
-                                {{ $item->created_at->format('d M Y') }}
-                            </td>
-
-                            <td class="px-5 py-4 text-center">
-                                <form action="{{ route('analisis.destroy',$item->id) }}"
-                                      method="POST"
-                                      onsubmit="return confirm('Yakin ingin menghapus hasil analisis ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="text-red-500 hover:text-red-600 text-lg transition">
-                                        🗑
-                                    </button>
-                                </form>
-                            </td>
-
-                        </tr>
                     @empty
-                        <tr>
-                            <td colspan="8" class="text-center py-10 text-gray-400">
-                                Belum ada hasil analisis
-                            </td>
-                        </tr>
+
+                    <tr>
+                        <td colspan="8" class="text-center py-10 text-gray-500 dark:text-slate-400">
+                            Belum ada hasil analisis
+                        </td>
+                    </tr>
+
                     @endforelse
 
                 </tbody>
 
             </table>
+
         </div>
 
         <div class="mt-6">

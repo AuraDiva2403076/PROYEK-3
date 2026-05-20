@@ -33,14 +33,14 @@ class DashboardController extends Controller
 
         $totalPengguna = User::count();
 
-        // Grafik penjualan per bulan
+        // Grafik penjualan per bulan (SQLite)
         $grafikPenjualan = Penjualan::select(
-                DB::raw('MONTH(tanggal) as bulan'),
-                DB::raw('SUM(total) as total')
+                DB::raw("strftime('%m', tanggal) as bulan"),
+                DB::raw("SUM(total) as total")
             )
             ->whereYear('tanggal', now()->year)
-            ->groupBy(DB::raw('MONTH(tanggal)'))
-            ->orderBy(DB::raw('MONTH(tanggal)'))
+            ->groupBy(DB::raw("strftime('%m', tanggal)"))
+            ->orderBy(DB::raw("strftime('%m', tanggal)"))
             ->get();
 
         // Produk terlaris

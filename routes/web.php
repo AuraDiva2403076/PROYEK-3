@@ -12,12 +12,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Penjualan;
-
-
-
-Route::get('/', [DashboardController::class, 'index'])
-    ->name('dashboard');
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +19,6 @@ Route::get('/', [DashboardController::class, 'index'])
 |--------------------------------------------------------------------------
 */
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
 
 Route::get('/dashboard/data', [DashboardController::class, 'data'])
     ->name('dashboard.data');
@@ -35,66 +28,49 @@ Route::get('/dashboard/data', [DashboardController::class, 'data'])
 | Search
 |--------------------------------------------------------------------------
 */
-Route::get('/search', [SearchController::class, 'index'])
-    ->name('search');
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 /*
 |--------------------------------------------------------------------------
 | Produk / Katalog
 |--------------------------------------------------------------------------
 */
-Route::get('/katalog', [ProdukController::class, 'index'])
-    ->name('katalog');
-
-Route::get('/produk/create', [ProdukController::class, 'create'])
-    ->name('produk.tambah_produk');
-
-Route::post('/produk/store', [ProdukController::class, 'store'])
-    ->name('produk.store');
-
-Route::put('/produk/{id}', [ProdukController::class, 'update'])
-    ->name('produk.update');
-
-Route::delete('/produk/{id}', [ProdukController::class, 'destroy'])
-    ->name('produk.destroy');
+Route::get('/katalog', [ProdukController::class, 'index'])->name('katalog');
+Route::get('/produk/create', [ProdukController::class, 'create'])->name('produk.tambah_produk');
+Route::post('/produk/store', [ProdukController::class, 'store'])->name('produk.store');
+Route::put('/produk/{id}', [ProdukController::class, 'update'])->name('produk.update');
+Route::delete('/produk/{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
 
 /*
 |--------------------------------------------------------------------------
 | Penjualan
 |--------------------------------------------------------------------------
 */
-Route::get('/penjualan', [PenjualanController::class, 'index'])
-    ->name('penjualan');
+Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan');
 
 /*
 |--------------------------------------------------------------------------
 | Pengguna
 |--------------------------------------------------------------------------
 */
-Route::get('/pengguna', [PenggunaController::class, 'index'])
-    ->name('pengguna');
-
-Route::patch('/pengguna/{id}/status', [PenggunaController::class, 'updateStatus'])
-    ->name('pengguna.updateStatus');
+Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna');
+Route::patch('/pengguna/{id}/status', [PenggunaController::class, 'updateStatus'])->name('pengguna.updateStatus');
 
 /*
 |--------------------------------------------------------------------------
 | Pengaturan
 |--------------------------------------------------------------------------
 */
-Route::view('/pengaturan', 'pengaturan')
-    ->name('pengaturan');
+Route::view('/pengaturan', 'pengaturan')->name('pengaturan');
 
 /*
 |--------------------------------------------------------------------------
-| AI / Rekomendasi
+| AI / Rekomendasi (Fuzzy)
 |--------------------------------------------------------------------------
 */
 Route::prefix('dataset-ai')->name('dataset-ai.')->group(function () {
-
     Route::get('/', [RekomendasiController::class, 'index'])->name('index');
     Route::post('/predict', [RekomendasiController::class, 'predict'])->name('predict');
-
     Route::get('/{id}/edit', [RekomendasiController::class, 'edit'])->name('edit');
     Route::put('/{id}', [RekomendasiController::class, 'update'])->name('update');
     Route::delete('/{id}', [RekomendasiController::class, 'destroy'])->name('destroy');
@@ -110,7 +86,6 @@ Route::get('/ai', function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('laporan')->name('laporan.')->group(function () {
-
     // Penjualan
     Route::get('/penjualan', [PenjualanController::class, 'laporan'])->name('penjualan');
     Route::get('/penjualan/export', [PenjualanController::class, 'export'])->name('penjualan.export');
@@ -126,14 +101,14 @@ Route::prefix('laporan')->name('laporan.')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Image
+| Image Handling
 |--------------------------------------------------------------------------
 */
 Route::get('/produk-image/{filename}', [ImageController::class, 'show']);
 
 /*
 |--------------------------------------------------------------------------
-| Discount
+| Discount & Promo
 |--------------------------------------------------------------------------
 */
 Route::resource('discount', DiscountController::class);
@@ -188,19 +163,7 @@ Route::get('/pengaturan', function () {
     return view('pengaturan');
 })->name('pengaturan');
 
-Route::get('/penjualan', [PenjualanController::class, 'index'])
-    ->name('penjualan.index');
-
-Route::get('/penjualan/{id}/edit', [PenjualanController::class, 'edit'])
-    ->name('penjualan.edit');
-
-Route::put('/penjualan/{id}', [PenjualanController::class, 'update'])
-    ->name('penjualan.update');
-
-Route::delete('/penjualan/{id}', [PenjualanController::class, 'destroy'])
-    ->name('penjualan.destroy');
-
-    
+Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan');
 Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna');
 Route::post('/pengguna/{id}/status', [PenggunaController::class, 'updateStatus'])
     ->name('pengguna.updateStatus');
@@ -255,27 +218,3 @@ Route::resource('discount', DiscountController::class);
 Route::patch('/discount/{id}/toggle',
     [DiscountController::class, 'toggle'])
     ->name('discount.toggle');
-
-
-Route::get('/penjualan-stream', function () {
-    return response()->stream(function () {
-        $lastId = Penjualan::max('id') ?? 0;
-
-        while (true) {
-            $latestId = Penjualan::max('id') ?? 0;
-
-            if ($latestId > $lastId) {
-                echo "data: new-order\n\n";
-                ob_flush();
-                flush();
-                break;
-            }
-
-            sleep(1);
-        }
-    }, 200, [
-        'Content-Type' => 'text/event-stream',
-        'Cache-Control' => 'no-cache',
-        'Connection' => 'keep-alive',
-    ]);
-});
