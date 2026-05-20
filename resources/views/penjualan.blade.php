@@ -159,4 +159,17 @@
     </div>
 
     </div>
+    <script>
+    const eventSource = new EventSource("{{ url('/penjualan-stream') }}");
+
+    eventSource.onmessage = function (event) {
+        if (event.data === "new-order") {
+            window.location.reload();
+        }
+    };
+
+    eventSource.onerror = function () {
+        eventSource.close();
+    };
+</script>
     @endsection

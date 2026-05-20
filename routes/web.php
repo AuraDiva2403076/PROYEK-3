@@ -12,7 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ProfileController;
-
+use App\Models\Penjualan;
 
 
 
@@ -256,5 +256,26 @@ Route::patch('/discount/{id}/toggle',
     [DiscountController::class, 'toggle'])
     ->name('discount.toggle');
 
-    
 
+Route::get('/penjualan-stream', function () {
+    return response()->stream(function () {
+        $lastId = Penjualan::max('id') ?? 0;
+
+        while (true) {
+            $latestId = Penjualan::max('id') ?? 0;
+
+            if ($latestId > $lastId) {
+                echo "data: new-order\n\n";
+                ob_flush();
+                flush();
+                break;
+            }
+
+            sleep(1);
+        }
+    }, 200, [
+        'Content-Type' => 'text/event-stream',
+        'Cache-Control' => 'no-cache',
+        'Connection' => 'keep-alive',
+    ]);
+});
