@@ -159,7 +159,7 @@
     </div>
 
     </div>
-    <script>
+    <!-- <script>
     const eventSource = new EventSource("{{ url('/penjualan-stream') }}");
 
     eventSource.onmessage = function (event) {
@@ -171,5 +171,5 @@
     eventSource.onerror = function () {
         eventSource.close();
     };
-</script>
+</script> -->
     @endsection

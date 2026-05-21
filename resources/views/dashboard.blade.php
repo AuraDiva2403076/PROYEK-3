@@ -14,84 +14,34 @@
 
         <div class="grid grid-cols-4 gap-6">
 
-            {{-- TOTAL PENJUALAN --}}
             <div class="bg-red-100 p-6 rounded-2xl relative overflow-hidden">
-                <div class="bg-pink-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">
-                    🏷️
-                </div>
-
-                <h4 id="totalPesanan" class="text-2xl font-bold text-gray-800">
-                    {{ $totalPesanan }}
-                </h4>
-
-                <p class="text-xs text-gray-500">
-                    Total Penjualan
-                </p>
-
-                <a href="{{ route('penjualan.index') }}"
-                   class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">
-                    Lainnya →
-                </a>
+                <div class="bg-pink-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">🏷️</div>
+                <h4 id="totalPesanan" class="text-2xl font-bold text-gray-800">{{ $totalPesanan }}</h4>
+                <p class="text-xs text-gray-500">Total Penjualan</p>
+                <a href="{{ route('penjualan.index') }}" class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">Lainnya →</a>
             </div>
 
-            {{-- TOTAL PRODUK --}}
             <div class="bg-orange-100 p-6 rounded-2xl relative overflow-hidden">
-                <div class="bg-orange-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">
-                    🛒
-                </div>
-
-                <h4 id="totalProduk" class="text-2xl font-bold text-gray-800">
-                    {{ $totalProduk }}
-                </h4>
-
-                <p class="text-xs text-gray-500">
-                    Total Produk
-                </p>
-
-                <a href="{{ route('katalog') }}"
-                   class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">
-                    Lainnya →
-                </a>
+                <div class="bg-orange-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">🛒</div>
+                <h4 id="totalProduk" class="text-2xl font-bold text-gray-800">{{ $totalProduk }}</h4>
+                <p class="text-xs text-gray-500">Total Produk</p>
+                <a href="{{ route('katalog') }}" class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">Lainnya →</a>
             </div>
 
-            {{-- TOTAL PENDAPATAN --}}
             <div class="bg-green-100 p-6 rounded-2xl relative overflow-hidden">
-                <div class="bg-green-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">
-                    💰
-                </div>
-
+                <div class="bg-green-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">💰</div>
                 <h4 id="totalPendapatan" class="text-2xl font-bold text-gray-800">
                     Rp{{ number_format($totalPendapatan,0,',','.') }}
                 </h4>
-
-                <p class="text-xs text-gray-500">
-                    Total Pendapatan
-                </p>
-
-                <a href="{{ route('penjualan.index') }}"
-                   class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">
-                    Lainnya →
-                </a>
+                <p class="text-xs text-gray-500">Total Pendapatan</p>
+                <a href="{{ route('penjualan.index') }}" class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">Lainnya →</a>
             </div>
 
-            {{-- TOTAL PENGGUNA --}}
             <div class="bg-purple-100 p-6 rounded-2xl relative overflow-hidden">
-                <div class="bg-purple-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">
-                    👤
-                </div>
-
-                <h4 id="totalPengguna" class="text-2xl font-bold text-gray-800">
-                    {{ $totalPengguna }}
-                </h4>
-
-                <p class="text-xs text-gray-500">
-                    Total Pengguna
-                </p>
-
-                <a href="{{ route('pengguna') }}"
-                   class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">
-                    Lainnya →
-                </a>
+                <div class="bg-purple-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">👤</div>
+                <h4 id="totalPengguna" class="text-2xl font-bold text-gray-800">{{ $totalPengguna }}</h4>
+                <p class="text-xs text-gray-500">Total Pengguna</p>
+                <a href="{{ route('pengguna') }}" class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">Lainnya →</a>
             </div>
 
         </div>
@@ -109,18 +59,9 @@
 
             @php
                 $bulanLabels = [
-                    1 => 'Jan',
-                    2 => 'Feb',
-                    3 => 'Mar',
-                    4 => 'Apr',
-                    5 => 'Mei',
-                    6 => 'Jun',
-                    7 => 'Jul',
-                    8 => 'Agu',
-                    9 => 'Sep',
-                    10 => 'Okt',
-                    11 => 'Nov',
-                    12 => 'Des',
+                    1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+                    5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Agu',
+                    9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des',
                 ];
 
                 $dataBulanan = [];
@@ -136,18 +77,13 @@
                 }
 
                 $maxGrafikPenjualan = collect($dataBulanan)->max('total') ?: 1;
-
-                $warnaGrafik = [
-                    'bg-teal-200',
-                    'bg-pink-200',
-                ];
+                $warnaGrafik = ['bg-teal-200', 'bg-pink-200'];
             @endphp
 
             <div id="grafikPenjualanContainer"
                  class="h-64 w-full border-b border-l border-gray-100 flex items-end justify-between px-2">
 
                 @foreach($dataBulanan as $item)
-
                     @php
                         $tinggiGrafik = $item['total'] > 0
                             ? max(8, ($item['total'] / $maxGrafikPenjualan) * 180)
@@ -157,7 +93,6 @@
                     @endphp
 
                     <div class="flex flex-col items-center flex-1">
-
                         <div
                             class="w-6 rounded-t {{ $warnaBatang }}"
                             title="{{ $item['label'] }}: Rp{{ number_format($item['total'],0,',','.') }}"
@@ -167,19 +102,14 @@
                         <span class="text-[10px] text-gray-500 mt-2">
                             {{ $item['label'] }}
                         </span>
-
                     </div>
-
                 @endforeach
 
             </div>
-
         </div>
 
         {{-- PRODUK TERLARIS --}}
         <div class="bg-white p-6 rounded-3xl card-shadow">
-
-          
 
             <h3 class="font-bold mb-6 text-gray-800">
                 Produk Terlaris
@@ -192,7 +122,6 @@
             <div id="produkTerlarisContainer" class="space-y-4">
 
                 @forelse($produkTerlaris as $produk)
-
                     @php
                         $persenProduk = $produk->total_terjual > 0
                             ? min(($produk->total_terjual / $maxProdukTerjual) * 100, 100)
@@ -200,7 +129,6 @@
                     @endphp
 
                     <div>
-
                         <div class="flex justify-between text-xs text-gray-600 mb-1">
                             <span>{{ $produk->nama_produk }}</span>
                         </div>
@@ -212,19 +140,14 @@
                                 style="width: {{ $persenProduk }}%">
                             </div>
                         </div>
-
                     </div>
-
                 @empty
-
                     <div class="text-xs text-gray-400">
                         Belum ada produk terjual
                     </div>
-
                 @endforelse
 
             </div>
-
         </div>
 
     </div>
@@ -255,22 +178,12 @@
         const container = document.getElementById('grafikPenjualanContainer');
 
         const bulanLabels = {
-            1: 'Jan',
-            2: 'Feb',
-            3: 'Mar',
-            4: 'Apr',
-            5: 'Mei',
-            6: 'Jun',
-            7: 'Jul',
-            8: 'Agu',
-            9: 'Sep',
-            10: 'Okt',
-            11: 'Nov',
-            12: 'Des'
+            1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr',
+            5: 'Mei', 6: 'Jun', 7: 'Jul', 8: 'Agu',
+            9: 'Sep', 10: 'Okt', 11: 'Nov', 12: 'Des'
         };
 
         const warnaGrafik = ['bg-teal-200', 'bg-pink-200'];
-
         let dataBulanan = [];
 
         for (let bulan = 1; bulan <= 12; bulan++) {
@@ -352,8 +265,9 @@
         });
     }
 
-    loadDashboardData();
+    // Data awal sudah tampil dari Controller, jadi tidak perlu fetch lagi saat pertama buka.
+    // loadDashboardData();
 
-    setInterval(loadDashboardData, 5000);
+    setInterval(loadDashboardData, 30000);
 </script>
 @endsection
