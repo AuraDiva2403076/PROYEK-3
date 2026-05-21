@@ -44,12 +44,20 @@ class DashboardController extends Controller
             ->get();
 
         // Produk terlaris
-        $produkTerlaris = Penjualan::join('produks', 'penjualans.id_produk', '=', 'produks.id')
+        $produkTerlaris = Penjualan::join(
+                'produks',
+                'penjualans.id_produk',
+                '=',
+                'produks.kode_produk'
+            )
             ->select(
                 'produks.nama_produk',
                 DB::raw('SUM(penjualans.jumlah) as total_terjual')
             )
-            ->groupBy('produks.nama_produk')
+            ->groupBy(
+                'produks.kode_produk',
+                'produks.nama_produk'
+            )
             ->orderByDesc('total_terjual')
             ->take(4)
             ->get();
