@@ -20,6 +20,7 @@
 
         <div class="grid grid-cols-4 gap-6">
 
+
             {{-- TOTAL PENJUALAN --}}
             <div class="bg-red-100 dark:bg-[#374151]
                         p-6 rounded-2xl relative overflow-hidden
@@ -47,15 +48,14 @@
 
                 </p>
 
-<<<<<<< HEAD
+
                 <a href="{{ route('penjualan.index') }}"
-                   class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">
-=======
+                   class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic"
                 <a href="{{ route('penjualan') }}"
                    class="text-[10px] text-pink-400
                           absolute bottom-4 right-4 italic">
 
->>>>>>> ed7a199 (Update admin UI theme)
+ (Update admin UI theme)
                     Lainnya →
 
                 </a>
@@ -115,6 +115,25 @@
                 <h4 id="totalPendapatan"
                     class="text-2xl font-bold
                            text-gray-800 dark:text-white">
+
+
+            <div class="bg-red-100 p-6 rounded-2xl relative overflow-hidden">
+                <div class="bg-pink-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">🏷️</div>
+                <h4 id="totalPesanan" class="text-2xl font-bold text-gray-800">{{ $totalPesanan }}</h4>
+                <p class="text-xs text-gray-500">Total Penjualan</p>
+                <a href="{{ route('penjualan.index') }}" class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">Lainnya →</a>
+            </div>
+
+            <div class="bg-orange-100 p-6 rounded-2xl relative overflow-hidden">
+                <div class="bg-orange-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">🛒</div>
+                <h4 id="totalProduk" class="text-2xl font-bold text-gray-800">{{ $totalProduk }}</h4>
+                <p class="text-xs text-gray-500">Total Produk</p>
+                <a href="{{ route('katalog') }}" class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">Lainnya →</a>
+            </div>
+
+            <div class="bg-green-100 p-6 rounded-2xl relative overflow-hidden">
+                <div class="bg-green-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">💰</div>
+                <h4 id="totalPendapatan" class="text-2xl font-bold text-gray-800">
 
                     Rp{{ number_format($totalPendapatan,0,',','.') }}
 
@@ -176,6 +195,17 @@
 
                 </a>
 
+
+                <p class="text-xs text-gray-500">Total Pendapatan</p>
+                <a href="{{ route('penjualan.index') }}" class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">Lainnya →</a>
+            </div>
+
+            <div class="bg-purple-100 p-6 rounded-2xl relative overflow-hidden">
+                <div class="bg-purple-400 w-8 h-8 rounded-lg flex items-center justify-center text-white mb-4">👤</div>
+                <h4 id="totalPengguna" class="text-2xl font-bold text-gray-800">{{ $totalPengguna }}</h4>
+                <p class="text-xs text-gray-500">Total Pengguna</p>
+                <a href="{{ route('pengguna') }}" class="text-[10px] text-blue-400 absolute bottom-4 right-4 italic">Lainnya →</a>
+
             </div>
 
         </div>
@@ -201,18 +231,9 @@
             @php
 
                 $bulanLabels = [
-                    1 => 'Jan',
-                    2 => 'Feb',
-                    3 => 'Mar',
-                    4 => 'Apr',
-                    5 => 'Mei',
-                    6 => 'Jun',
-                    7 => 'Jul',
-                    8 => 'Agu',
-                    9 => 'Sep',
-                    10 => 'Okt',
-                    11 => 'Nov',
-                    12 => 'Des',
+                    1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
+                    5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Agu',
+                    9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des',
                 ];
 
                 $dataBulanan = [];
@@ -228,6 +249,7 @@
                     ];
                 }
 
+
                 $maxGrafikPenjualan =
                     collect($dataBulanan)->max('total') ?: 1;
 
@@ -235,6 +257,10 @@
                     'bg-teal-300',
                     'bg-pink-300',
                 ];
+
+
+                $maxGrafikPenjualan = collect($dataBulanan)->max('total') ?: 1;
+                $warnaGrafik = ['bg-teal-200', 'bg-pink-200'];
 
             @endphp
 
@@ -245,7 +271,6 @@
                         flex items-end justify-between px-2">
 
                 @foreach($dataBulanan as $item)
-
                     @php
 
                         $tinggiGrafik = $item['total'] > 0
@@ -259,9 +284,16 @@
 
                     <div class="flex flex-col items-center flex-1">
 
+
                         <div class="w-6 rounded-t {{ $warnaBatang }}"
                              title="{{ $item['label'] }}"
                              style="height: {{ $tinggiGrafik }}px">
+
+
+                        <div
+                            class="w-6 rounded-t {{ $warnaBatang }}"
+                            title="{{ $item['label'] }}: Rp{{ number_format($item['total'],0,',','.') }}"
+                            style="height: {{ $tinggiGrafik }}px">
 
                         </div>
 
@@ -272,28 +304,25 @@
                             {{ $item['label'] }}
 
                         </span>
-
                     </div>
-
                 @endforeach
 
             </div>
-
         </div>
 
         {{-- PRODUK TERLARIS --}}
-<<<<<<< HEAD
+
         <div class="bg-white p-6 rounded-3xl card-shadow">
 
-          
-=======
+
         <div class="bg-white dark:bg-[#1F2937]
                     p-6 rounded-3xl card-shadow
                     transition-all duration-300">
 
             <h3 class="font-bold mb-6
                        text-gray-800 dark:text-white">
->>>>>>> ed7a199 (Update admin UI theme)
+
+            <h3 class="font-bold mb-6 text-gray-800">
 
                 Produk Terlaris
 
@@ -307,7 +336,6 @@
             <div id="produkTerlarisContainer" class="space-y-4">
 
                 @forelse($produkTerlaris as $produk)
-
                     @php
 
                         $persenProduk = $produk->total_terjual > 0
@@ -318,6 +346,7 @@
 
                     <div>
 
+
                         <div class="flex justify-between
                                     text-xs
                                     text-gray-600 dark:text-gray-300
@@ -327,6 +356,9 @@
                                 {{ $produk->nama_produk }}
                             </span>
 
+
+                        <div class="flex justify-between text-xs text-gray-600 mb-1">
+                            <span>{{ $produk->nama_produk }}</span>
                         </div>
 
                         <div class="w-full
@@ -340,21 +372,16 @@
                             </div>
 
                         </div>
-
                     </div>
-
                 @empty
-
                     <div class="text-xs text-gray-400">
 
                         Belum ada produk terjual
 
                     </div>
-
                 @endforelse
 
             </div>
-
         </div>
 
     </div>
@@ -391,15 +418,110 @@
 
             })
 
+
             .catch(error =>
                 console.log('Gagal mengambil data dashboard:', error)
             );
+
+    function renderGrafikPenjualan(grafikPenjualan) {
+        const container = document.getElementById('grafikPenjualanContainer');
+
+        const bulanLabels = {
+            1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr',
+            5: 'Mei', 6: 'Jun', 7: 'Jul', 8: 'Agu',
+            9: 'Sep', 10: 'Okt', 11: 'Nov', 12: 'Des'
+        };
+
+        const warnaGrafik = ['bg-teal-200', 'bg-pink-200'];
+        let dataBulanan = [];
+
+        for (let bulan = 1; bulan <= 12; bulan++) {
+            let data = grafikPenjualan.find(item => parseInt(item.bulan) === bulan);
+
+            dataBulanan.push({
+                bulan: bulan,
+                label: bulanLabels[bulan],
+                total: data ? parseFloat(data.total) : 0
+            });
+        }
+
+        let maxTotal = Math.max(...dataBulanan.map(item => item.total), 1);
+
+        container.innerHTML = '';
+
+        dataBulanan.forEach((item, index) => {
+            let tinggi = item.total > 0
+                ? Math.max(8, (item.total / maxTotal) * 180)
+                : 4;
+
+            let warna = warnaGrafik[index % warnaGrafik.length];
+
+            container.innerHTML += `
+                <div class="flex flex-col items-center flex-1">
+                    <div
+                        class="w-6 rounded-t ${warna}"
+                        title="${item.label}: ${formatRupiah(item.total)}"
+                        style="height: ${tinggi}px">
+                    </div>
+
+                    <span class="text-[10px] text-gray-500 mt-2">
+                        ${item.label}
+                    </span>
+                </div>
+            `;
+        });
     }
 
-    loadDashboardData();
+    function renderProdukTerlaris(produkTerlaris) {
+        const container = document.getElementById('produkTerlarisContainer');
+
+        container.innerHTML = '';
+
+        if (produkTerlaris.length === 0) {
+            container.innerHTML = `
+                <div class="text-xs text-gray-400">
+                    Belum ada produk terjual
+                </div>
+            `;
+            return;
+        }
+
+        let maxTerjual = Math.max(
+            ...produkTerlaris.map(item => parseInt(item.total_terjual)),
+            1
+        );
+
+        produkTerlaris.forEach(produk => {
+            let persen = produk.total_terjual > 0
+                ? Math.min((produk.total_terjual / maxTerjual) * 100, 100)
+                : 0;
+
+            container.innerHTML += `
+                <div>
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>${produk.nama_produk}</span>
+                    </div>
+
+                    <div class="w-full bg-gray-50 h-3 rounded-full overflow-hidden">
+                        <div
+                            class="bg-pink-400 h-full"
+                            title="Terjual ${produk.total_terjual}"
+                            style="width: ${persen}%">
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+    }
+
+    // Data awal sudah tampil dari Controller, jadi tidak perlu fetch lagi saat pertama buka.
+    // loadDashboardData();
+
 
     setInterval(loadDashboardData, 5000);
 
+    setInterval(loadDashboardData, 30000);
 </script>
 
 @endsection
