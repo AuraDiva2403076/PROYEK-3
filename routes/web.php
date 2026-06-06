@@ -46,7 +46,7 @@ Route::delete('/produk/{id}', [ProdukController::class, 'destroy'])->name('produ
 | Penjualan
 |--------------------------------------------------------------------------
 */
-Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan');
+Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -117,17 +117,17 @@ Route::patch('/discount/{id}/toggle', [DiscountController::class, 'toggle'])
     ->name('discount.toggle');
     // Route khusus untuk Admin yang sudah login
 Route::middleware(['auth:admin'])->group(function () {
-    
+
     // Proses Update Profile Admin
     Route::put('/admin/profile/update', [ProfileController::class, 'update'])->name('admin.profile.update');
 
     // Proses Logout Admin
     Route::post('/logout', function (Request $request) {
         Auth::guard('admin')->logout();
-        
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect('/login'); // Arahkan ke halaman login admin Anda setelah logout
     })->name('logout');
 });
@@ -143,7 +143,7 @@ Route::middleware(['guest'])->group(function () {
 
 // AUTH: Hanya bisa diakses jika SUDAH login sebagai Admin
 Route::middleware(['auth:admin'])->group(function () {
-    
+
     // Route Update Profile Admin yang sesungguhnya (Sudah Terproteksi)
     Route::put('/admin/profile/update', [ProfileController::class, 'update'])->name('admin.profile.update');
 
@@ -163,7 +163,7 @@ Route::get('/pengaturan', function () {
     return view('pengaturan');
 })->name('pengaturan');
 
-Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan');
+// Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan');
 Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna');
 Route::post('/pengguna/{id}/status', [PenggunaController::class, 'updateStatus'])
     ->name('pengguna.updateStatus');
