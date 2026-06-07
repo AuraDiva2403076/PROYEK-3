@@ -47,6 +47,14 @@ Route::delete('/produk/{id}', [ProdukController::class, 'destroy'])->name('produ
 |--------------------------------------------------------------------------
 */
 Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
+Route::get('/penjualan/{id}/edit', [PenjualanController::class, 'edit'])
+    ->name('penjualan.edit');
+
+Route::put('/penjualan/{id}', [PenjualanController::class, 'update'])
+    ->name('penjualan.update');
+
+Route::delete('/penjualan/{id}', [PenjualanController::class, 'destroy'])
+    ->name('penjualan.destroy');
 
 /*
 |--------------------------------------------------------------------------

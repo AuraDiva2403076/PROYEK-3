@@ -103,7 +103,7 @@
          style="border-color: rgba(243, 139, 147, 0.20);">
 
         <form method="GET"
-              action="{{ route('penjualan') }}"
+              action="{{ route('penjualan.index') }}"
               class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
 
             <div class="flex flex-wrap items-center gap-3">
@@ -186,7 +186,7 @@
                     Terapkan Filter
                 </button>
 
-                <a href="{{ route('penjualan') }}"
+                <a href="{{ route('penjualan.index') }}"
                    class="px-5 py-2.5 rounded-2xl
                           text-sm font-semibold transition-all duration-300
                           hover:bg-[#F38B93]/10"
@@ -225,150 +225,108 @@
 
                 <tbody class="bg-white dark:bg-[#1E293B] divide-y divide-[#F38B93]/10">
 
-                    @forelse($data as $item)
+@forelse($data as $item)
 
-                    <tr class="transition-all duration-300 hover:bg-[#F38B93]/10 dark:hover:bg-[#263247]">
+<tr class="transition-all duration-300 hover:bg-[#F38B93]/10 dark:hover:bg-[#263247]">
 
-                        <td class="p-4 font-semibold text-gray-800 dark:text-white">
-                            {{ $item->kode_pesanan }}
-                        </td>
+    <td class="p-4 font-semibold text-gray-800 dark:text-white">
+        {{ $item->kode_pesanan }}
+    </td>
 
-                        <td class="p-4 text-gray-600 dark:text-slate-300">
-                            {{ $item->id_produk }}
-                        </td>
+    <td class="p-4 text-gray-600 dark:text-slate-300">
+        {{ $item->id_produk }}
+    </td>
 
-                        <td class="p-4 text-gray-600 dark:text-slate-300">
-                            {{ $item->id_pelanggan }}
-                        </td>
+    <td class="p-4 text-gray-600 dark:text-slate-300">
+        {{ $item->id_pelanggan }}
+    </td>
 
-                        <td class="p-4 text-gray-600 dark:text-slate-300">
-                            {{ $item->jumlah }}
-                        </td>
+    <td class="p-4 text-gray-600 dark:text-slate-300">
+        {{ $item->jumlah }}
+    </td>
 
-                        <td class="p-4 font-medium text-gray-700 dark:text-slate-200">
-                            Rp{{ number_format($item->harga, 0, ',', '.') }}
-                        </td>
+    <td class="p-4 font-medium text-gray-700 dark:text-slate-200">
+        Rp{{ number_format($item->harga, 0, ',', '.') }}
+    </td>
 
-                        <td class="p-4 font-bold" style="color: #F38B93;">
-                            Rp{{ number_format($item->total, 0, ',', '.') }}
-                        </td>
+    <td class="p-4 font-bold" style="color: #F38B93;">
+        Rp{{ number_format($item->total, 0, ',', '.') }}
+    </td>
 
-                        <td class="p-4 text-gray-500 dark:text-slate-400">
-                            {{ $item->tanggal }}
-                        </td>
+    <td class="p-4 text-gray-500 dark:text-slate-400">
+        {{ $item->tanggal }}
+    </td>
 
-                        <td class="p-4">
-                            @if($item->status == 'Selesai')
-                                <span class="px-4 py-1.5 rounded-full border text-xs font-semibold"
-                                      style="background-color: rgba(243, 139, 147, 0.15); color: #F38B93; border-color: rgba(243, 139, 147, 0.20);">
-                                    Selesai
-                                </span>
-                            @elseif($item->status == 'Batal')
-                                <span class="px-4 py-1.5 rounded-full bg-red-100 dark:bg-red-500/15 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-400/20 text-xs font-semibold">
-                                    Batal
-                                </span>
-                            @else
-                                <span class="px-4 py-1.5 rounded-full border text-xs font-semibold"
-                                      style="background-color: rgba(243, 139, 147, 0.15); color: #F38B93; border-color: rgba(243, 139, 147, 0.20);">
-                                    Dalam Proses
-                                </span>
-                            @endif
-                        </td>
+    <td class="p-4">
+        @if($item->status == 'Selesai')
+            <span class="px-4 py-1.5 rounded-full border text-xs font-semibold"
+                  style="background-color: rgba(243, 139, 147, 0.15); color: #F38B93; border-color: rgba(243, 139, 147, 0.20);">
+                Selesai
+            </span>
+        @elseif($item->status == 'Batal')
+            <span class="px-4 py-1.5 rounded-full bg-red-100 dark:bg-red-500/15 text-red-600 dark:text-red-300 border border-red-200 dark:border-red-400/20 text-xs font-semibold">
+                Batal
+            </span>
+        @else
+            <span class="px-4 py-1.5 rounded-full border text-xs font-semibold"
+                  style="background-color: rgba(243, 139, 147, 0.15); color: #F38B93; border-color: rgba(243, 139, 147, 0.20);">
+                Dalam Proses
+            </span>
+        @endif
+    </td>
 
-                        <td class="p-4 text-gray-600 dark:text-slate-300">
-                            {{ $item->metode ?? '-' }}
-                        </td>
+    <td class="p-4 text-gray-600 dark:text-slate-300">
+        {{ $item->metode ?? '-' }}
+    </td>
 
-                   {{-- AKSI --}}
-<td class="p-3">
-    <div class="flex gap-2">
-        <a href="{{ route('penjualan.edit', $item->id) }}"
-           class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200">
-            <i class='bx bx-pencil'></i>
-        </a>
+    <td class="p-3">
+        <div class="flex gap-2">
 
-        <form action="{{ route('penjualan.destroy', $item->id) }}"
-              method="POST"
-              onsubmit="return confirm('Yakin ingin menghapus data penjualan ini?')">
-            @csrf
-            @method('DELETE')
+            <a href="{{ route('penjualan.edit', $item->id) }}"
+               class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200">
+                <i class='bx bx-pencil'></i>
+            </a>
 
-            <button type="submit"
-                class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200">
-                <i class='bx bx-trash'></i>
-            </button>
-        </form>
-    </div>
-</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-                        <td class="p-4">
-                            <div class="flex items-center justify-center gap-2">
+            <form action="{{ route('penjualan.destroy', $item->id) }}"
+                  method="POST"
+                  onsubmit="return confirm('Yakin ingin menghapus data penjualan ini?')">
 
-                                <button
-                                    class="w-9 h-9 rounded-xl transition-all duration-300 flex items-center justify-center hover:text-white"
-                                    style="background-color: rgba(243, 139, 147, 0.15); color: #F38B93;"
-                                    onmouseover="this.style.backgroundColor='#F38B93'; this.style.color='#ffffff';"
-                                    onmouseout="this.style.backgroundColor='rgba(243, 139, 147, 0.15)'; this.style.color='#F38B93';">
-                                    <i class="bx bx-pencil text-lg"></i>
-                                </button>
+                @csrf
+                @method('DELETE')
 
-                                <button
-                                    class="w-9 h-9 rounded-xl transition-all duration-300 flex items-center justify-center hover:text-white"
-                                    style="background-color: rgba(243, 139, 147, 0.15); color: #F38B93;"
-                                    onmouseover="this.style.backgroundColor='#F38B93'; this.style.color='#ffffff';"
-                                    onmouseout="this.style.backgroundColor='rgba(243, 139, 147, 0.15)'; this.style.color='#F38B93';">
-                                    <i class="bx bx-trash text-lg"></i>
-                                </button>
+                <button type="submit"
+                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200">
+                    <i class='bx bx-trash'></i>
+                </button>
 
-                            </div>
-                        </td>
-
-                    </tr>
-
-                    @empty
-
-                    <tr>
-                        <td colspan="10" class="p-10 text-center text-gray-500 dark:text-slate-400">
-                            Belum ada data penjualan
-                        </td>
-                    </tr>
-
-                    @endforelse
-
-                </tbody>
-
-            </table>
+            </form>
 
         </div>
+    </td>
 
-        <div class="p-5 border-t border-[#F38B93]/10 bg-white dark:bg-[#1E293B]">
-            {{ $data->links() }}
-        </div>
+</tr>
 
-    </div>
+@empty
 
-    </div>
-    <!-- <script>
-    const eventSource = new EventSource("{{ url('/penjualan-stream') }}");
+<tr>
+    <td colspan="10" class="p-10 text-center text-gray-500 dark:text-slate-400">
+        Belum ada data penjualan
+    </td>
+</tr>
 
-    eventSource.onmessage = function (event) {
-        if (event.data === "new-order") {
-            window.location.reload();
-        }
-    };
+@endforelse
 
-    eventSource.onerror = function () {
-        eventSource.close();
-    };
+</tbody>     
 
-</script>
-    @endsection
+              </table>
+
 </div>
+
+<div class="p-5 border-t border-[#F38B93]/10 bg-white dark:bg-[#1E293B]">
+    {{ $data->links() }}
+</div>
+
+</div>
+
 @endsection
-=======
-</script> -->
-    @endsection
 
